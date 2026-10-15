@@ -1,0 +1,64 @@
+{
+  "name": "setup-guard-mcp",
+  "version": "0.1.0",
+  "description": "Version-Aware Setup & Migration MCP Server for JS/TS ecosystems (Antigravity, Codex, Claude Code, Cursor)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eunryong/Version-Aware-Setup.git"
+  },
+  "homepage": "https://github.com/Eunryong/Version-Aware-Setup#readme",
+  "bugs": {
+    "url": "https://github.com/Eunryong/Version-Aware-Setup/issues"
+  },
+  "type": "module",
+  "bin": {
+    "setup-guard-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "seed",
+    "sources",
+    "AGENTS.md",
+    "GEMINI.md",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && npm run build:index",
+    "build:ts": "tsc -p tsconfig.json",
+    "build:index": "node --no-warnings ./node_modules/tsx/dist/cli.mjs indexer/build.ts",
+    "start": "node --no-warnings dist/index.js",
+    "dev": "node --no-warnings ./node_modules/tsx/dist/cli.mjs src/index.ts",
+    "eval": "node --no-warnings ./node_modules/tsx/dist/cli.mjs eval/runEval.ts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "antigravity",
+    "codex",
+    "cursor",
+    "claude-code",
+    "migration",
+    "semver",
+    "nextjs",
+    "tailwindcss",
+    "eslint"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0",
+    "semver": "^7.7.1",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/semver": "^7.5.8",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

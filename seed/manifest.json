@@ -1,0 +1,74 @@
+{
+  "manifest_version": 1,
+  "generated_at": "2026-10-15T07:02:04.577Z",
+  "min_client_version": "0.1.0",
+  "embedding_config": {
+    "enabled": false,
+    "model_name": "Xenova/bge-small-en-v1.5",
+    "model_revision": "main",
+    "dimensions": 384,
+    "distance_metric": "cosine"
+  },
+  "collections": {
+    "js-ts": {
+      "version": "2026.10.15.1",
+      "download_url": "https://github.com/Eunryong/Version-Aware-Setup/releases/download/index-v1/index-js-ts.db.gz",
+      "compressed_size_bytes": 26056,
+      "uncompressed_size_bytes": 147456,
+      "uncompressed_sha256": "f8d1464eecb9d040914ef66f22760cd6d046a4a191bb59b46faab53f54925cbf",
+      "libraries": {
+        "tailwindcss": {
+          "majors": [
+            3,
+            4
+          ],
+          "latest_indexed": "4.0.0"
+        },
+        "eslint": {
+          "majors": [
+            8,
+            9
+          ],
+          "latest_indexed": "9.14.0"
+        },
+        "nextjs": {
+          "majors": [
+            13,
+            14,
+            15
+          ],
+          "latest_indexed": "15.0.3"
+        },
+        "react": {
+          "majors": [
+            18,
+            19
+          ],
+          "latest_indexed": "19.0.0"
+        },
+        "vite": {
+          "majors": [
+            4,
+            5,
+            6
+          ],
+          "latest_indexed": "6.0.0"
+        },
+        "typescript": {
+          "majors": [
+            5
+          ],
+          "latest_indexed": "5.7.2"
+        },
+        "node": {
+          "majors": [
+            18,
+            20,
+            22
+          ],
+          "latest_indexed": "22.11.0"
+        }
+      }
+    }
+  }
+}

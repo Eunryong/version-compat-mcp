@@ -1,0 +1,55 @@
+name: Build, Evaluate & Publish Version Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sources/**"
+      - "indexer/**"
+      - "src/**"
+      - "eval/**"
+  schedule:
+    - cron: "0 3 * * *" # Daily freshness check at 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript & Generate Index DB + Manifest
+        run: npm run build
+
+      - name: Run Unit & Integration Tests
+        run: npm test
+
+      - name: Run Search Quality & Guardrail Evaluation Gate
+        run: npm run eval
+
+      - name: Publish Index Artifacts to GitHub Release (index-v1)
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="index-v1"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" seed/index-js-ts.db.gz seed/manifest.json --clobber
+          else
+            gh release create "$TAG" seed/index-js-ts.db.gz seed/manifest.json \
+              --title "Setup Guard Precomputed Index (v1)" \
+              --notes "Automated precomputed SQLite FTS5 index and SHA-256 manifest for setup-guard-mcp."
+          fi

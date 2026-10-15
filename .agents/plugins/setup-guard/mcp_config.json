@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "setup-guard": {
+      "command": "npx",
+      "args": ["-y", "setup-guard-mcp"],
+      "env": {
+        "SETUP_GUARD_OFFLINE": "0"
+      }
+    }
+  }
+}

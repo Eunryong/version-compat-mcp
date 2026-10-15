@@ -1,0 +1,5 @@
+{
+  "name": "setup-guard",
+  "version": "0.1.0",
+  "description": "Version-Aware Setup & Migration MCP for JS/TS (Node.js, TypeScript, React, Next.js, Vite, Tailwind CSS, ESLint)"
+}
