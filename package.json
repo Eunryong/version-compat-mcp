@@ -21,7 +21,8 @@
     "sources",
     "AGENTS.md",
     "GEMINI.md",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=22.5.0"
@@ -32,6 +33,8 @@
     "build:index": "node --no-warnings ./node_modules/tsx/dist/cli.mjs indexer/build.ts",
     "start": "node --no-warnings dist/index.js",
     "dev": "node --no-warnings ./node_modules/tsx/dist/cli.mjs src/index.ts",
+    "inspect": "npx -y @modelcontextprotocol/inspector node dist/index.js",
+    "inspect:cli": "npx -y @modelcontextprotocol/inspector --cli node dist/index.js --method tools/list",
     "eval": "node --no-warnings ./node_modules/tsx/dist/cli.mjs eval/runEval.ts",
     "test": "vitest run"
   },

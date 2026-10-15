@@ -1,14 +1,33 @@
 #!/usr/bin/env node
+/**
+ * Guard stdio transport:
+ * Ensure nothing (including third-party libraries) ever writes non-protocol text to stdout.
+ */
+console.log = (...args: unknown[]) => {
+  if (process.env.DEBUG === "true" || process.env.SETUP_GUARD_DEBUG === "1") {
+    process.stderr.write(`[setup-guard] ${args.map(String).join(" ")}\n`);
+  }
+};
+
+const originalEmitWarning = process.emitWarning.bind(process);
+process.emitWarning = ((warning: string | Error, ...args: unknown[]) => {
+  const msg = typeof warning === "string" ? warning : warning?.message ?? "";
+  if (msg.includes("SQLite is an experimental feature")) {
+    return;
+  }
+  return (originalEmitWarning as (...a: unknown[]) => void)(warning, ...args);
+}) as typeof process.emitWarning;
+
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createSetupGuardServer } from "./server.js";
-import { logger } from "./utils/logger.js";
+import { log, logger } from "./utils/logger.js";
 
 async function main(): Promise<void> {
   const server = createSetupGuardServer();
   const transport = new StdioServerTransport();
 
   await server.connect(transport);
-  logger.info("setup-guard-mcp server started over stdio");
+  log("Server started over stdio");
 }
 
 main().catch((err) => {

@@ -1,34 +1,94 @@
 # setup-guard-mcp
 
-> **Version-Aware Setup & Migration MCP Server (JS/TS)**  
-> AI 코딩 에이전트(**Google Antigravity**, **OpenAI Codex**, **Claude Code**, **Cursor**)가 학습 시점 한계로 인해 구버전 설정(`tailwind.config.js`, `.eslintrc.json`)이나 호환되지 않는 버전 조합, 잘못된 패키지 매니저 명령어를 제안하는 문제를 해결하는 **Zero-Config 로컬 MCP 서버**입니다.
+> **"Your agent reads the wrong docs. `setup-guard` makes it read the right version."**
 
-Repository: [https://github.com/Eunryong/Version-Aware-Setup](https://github.com/Eunryong/Version-Aware-Setup)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22.5.0-brightgreen.svg)](https://nodejs.org/)
+[![MCP](https://img.shields.io/badge/MCP-Stdio%20Server-purple.svg)](https://modelcontextprotocol.io/)
+[![Zero Config](https://img.shields.io/badge/API%20Key-Not%20Required-success.svg)](#1-why-setup-guard-mcp)
 
----
+**Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JS/TS Ecosystem.**
 
-## 1. 핵심 설계 철학 (Why `setup-guard-mcp`?)
+`setup-guard-mcp` is a zero-config, local Model Context Protocol (MCP) server that prevents AI coding agents (**Google Antigravity**, **OpenAI Codex**, **Claude Code**, **Cursor**, **Windsurf**) from hallucinating obsolete configurations, incompatible dependency versions, or mismatched package manager commands.
 
-단순히 "최신 문서를 검색해주는 RAG 도구"가 아니라, **"현재 프로젝트의 실제 버전 조합과 설정 패러다임을 기준으로 근거 있는 세팅/업그레이드 정보를 공급하는 결정론적 + 하이브리드 검색 도구"**입니다.
-
-1. **Zero-Config & No API Key (`npx setup-guard-mcp`)**
-   - 원격 서버나 OpenAI/Anthropic/Cohere API 키 없이 로컬 `stdio` 프로세스로 즉시 동작합니다.
-   - GitHub Actions CI에서 사전 빌드된 SQLite FTS5 인덱스(`seed/index-js-ts.db`)를 내장 및 캐시(`~/.cache/setup-guard-mcp/`)하여 첫 실행 시에도 지연(Cold-start block) 없이 응답합니다.
-2. **정형 데이터(결정론적 검증)와 비정형 문서(태그 고정 검색)의 엄격한 분리**
-   - **정형 데이터 (No RAG / 환각 0%)**: 로컬 `package.json`, Lockfile(`pnpm-lock.yaml`, `bun.lock`, `yarn.lock`, `package-lock.json`), `.nvmrc`, `tsconfig.json` 파싱 + npm registry abbreviated metadata API(`engines`, `peerDependencies`, `deprecated`) 직접 대조.
-   - **비정형 문서 (SQLite FTS5 BM25)**: GitHub 태그(`v15.0.0`, `v4.0.0`, `v9.0.0` 등)에 고정된 공식 Migration Guide, Breaking Changes, Deprecation 문서만 선별 인덱싱.
-3. **안전장치 정책 (Safety Guardrails)**
-   - **No Silent Latest Fallback**: 버전이 불명확하거나 다중 메이저 범위(`>=13.0.0 <16.0.0`)일 때 임의로 최신 버전을 가정하지 않고 `ambiguous_version` 상태를 반환합니다.
-   - **Zero-Hit ≠ Removed**: 검색 결과가 0건(`no_results_found`)일 때 에이전트가 "해당 기능이 삭제되었다"고 단정하지 못하도록 명시적 `epistemic_notice` 가드레일을 반환합니다.
-   - **출처 및 해석 버전 강제 명시**: 모든 가이드는 `resolved_version`, `git_tag`, `source_url`을 포함합니다.
+Instead of acting as a generic documentation search engine, `setup-guard-mcp` grounds your agent in your project's **actual dependency graph, lockfile, runtime version, and configuration paradigm**—combining deterministic local/registry verification with tag-pinned official migration guides.
 
 ---
 
-## 2. 호스트 에이전트 연동 가이드 (Antigravity / Codex / Claude Code / Cursor)
+## Table of Contents
 
-### A. Google Antigravity (AGY) 연동
+1. [Why `setup-guard-mcp`?](#1-why-setup-guard-mcp)
+2. [Core Architecture](#2-core-architecture)
+3. [Quick Start & Host Agent Configuration](#3-quick-start--host-agent-configuration)
+   - [Google Antigravity (AGY)](#a-google-antigravity-agy)
+   - [OpenAI Codex (CLI & Desktop App)](#b-openai-codex-cli--desktop-app)
+   - [Claude Code & Claude Desktop](#c-claude-code--claude-desktop)
+   - [Cursor](#d-cursor)
+4. [MCP Tools Reference (5 Tools)](#4-mcp-tools-reference-5-tools)
+5. [Supported Ecosystem (Phase 1)](#5-supported-ecosystem-phase-1)
+6. [Safety & Epistemic Guardrails](#6-safety--epistemic-guardrails)
+7. [Testing with MCP Inspector & Evaluation Suite](#7-testing-with-mcp-inspector--evaluation-suite)
+8. [Repository Structure](#8-repository-structure)
+9. [License](#9-license)
 
-**1) 전역 MCP 설정 (`~/.gemini/antigravity/mcp_config.json`)**
+---
+
+## 1. Why `setup-guard-mcp`?
+
+Because LLM pre-training weights are frozen at a cutoff date, coding agents routinely make costly setup and migration errors:
+
+- **Tailwind CSS v4 vs. v3**: Suggesting `npx tailwindcss init -p`, `tailwind.config.js`, and `@tailwind base;` in a **Tailwind CSS v4** project (which uses `@import "tailwindcss";` and `@tailwindcss/vite` or `@tailwindcss/postcss`).
+- **ESLint v9 vs. v8**: Generating legacy `.eslintrc.json` or `.eslintignore` files in an **ESLint v9** project that requires `eslint.config.mjs` (Flat Config) and `typescript-eslint`.
+- **Next.js 15 & React 19**: Using synchronous `cookies()`, `headers()`, or `params` in **Next.js 15** (where Dynamic Request APIs are asynchronous `Promise`s), or proposing incompatible React 18 / Node.js combinations.
+- **Package Manager Mismatch**: Suggesting `npm install` in a repository locked with `pnpm-lock.yaml`, `bun.lock`, or `yarn.lock`.
+
+`setup-guard-mcp` eliminates these failure modes **without requiring any LLM API keys or remote servers**.
+
+---
+
+## 2. Core Architecture
+
+```mermaid
+flowchart LR
+    Agent["Host Agent<br/>(Antigravity / Codex / Claude / Cursor)"] <-->|"JSON-RPC 2.0 (stdio)"| Server["setup-guard-mcp"]
+
+    subgraph Deterministic["1. Deterministic Engine (Zero RAG / Zero Hallucination)"]
+        Local["Local File & Lockfile Parser<br/>package.json, pnpm-lock.yaml,<br/>bun.lock, yarn.lock, .nvmrc"]
+        Registry["npm Registry Abbreviated API<br/>engines.node, peerDependencies,<br/>deprecated (+ ETag Disk Cache)"]
+    end
+
+    subgraph Retrieval["2. Tag-Pinned Retrieval Engine (SQLite FTS5 BM25)"]
+        SeedDB["Precomputed SQLite FTS5 Index<br/>(seed/index-js-ts.db + SHA-256 Verify)"]
+        Corpus["Git-Tag Snapshots Only:<br/>Migration Guides, Breaking Changes,<br/>Deprecations & Setup Templates"]
+    end
+
+    Server --> Local
+    Server --> Registry
+    Server --> SeedDB
+    Corpus --> SeedDB
+```
+
+### Key Architectural Decisions
+
+1. **Strict Separation of Structured vs. Unstructured Data**
+   - **Structured Data (Deterministic)**: Local files (`package.json`, lockfiles, `.nvmrc`, `tsconfig.json`, `eslint.config.*`) and npm registry metadata (`engines`, `peerDependencies`, `deprecated` via `Accept: application/vnd.npm.install-v1+json`) are evaluated deterministically using `semver`. RAG is never used where exact logic applies.
+   - **Unstructured Docs (Indexed Retrieval)**: Only official migration guides, release note breaking-change sections, and deprecation notices pinned to immutable Git tags (e.g., `v15.0.3`, `v4.0.0`, `v9.14.0`) are indexed.
+2. **Zero-Config & Precomputed Index Distribution**
+   - Document chunking and SQLite FTS5 indexing happen in CI/build (`indexer/build.ts`), producing a self-contained `seed/index-js-ts.db` verified by SHA-256 (`seed/manifest.json`).
+   - Built on Node.js native `node:sqlite` (`DatabaseSync` with `FTS5` and `unicode61 tokenchars '@/_-.'`)—zero native C++ compilation (`node-gyp`) failures during `npx` execution.
+3. **Strict `stdio` Protocol Hygiene**
+   - In `stdio` MCP servers, `stdout` is strictly reserved for JSON-RPC 2.0 frames. `setup-guard-mcp` intercepts accidental `console.log` calls and routes all internal diagnostics exclusively to `process.stderr` only when `DEBUG="true"` is set.
+
+---
+
+## 3. Quick Start & Host Agent Configuration
+
+### Prerequisites
+- **Node.js**: `>= 22.5.0` (uses built-in `node:sqlite`)
+
+### A. Google Antigravity (AGY)
+
+**Option 1: Global MCP Configuration (`~/.gemini/config/mcp_config.json`)**
 ```json
 {
   "mcpServers": {
@@ -42,21 +102,23 @@ Repository: [https://github.com/Eunryong/Version-Aware-Setup](https://github.com
   }
 }
 ```
-> 로컬 클론 경로에서 직접 실행하려면 `"command": "node"`, `"args": ["/절대/경로/Version-Aware-Setup/dist/index.js"]`로 설정할 수 있습니다.
+*(If running from a local clone, set `"command": "node"` and `"args": ["/absolute/path/to/Version-Aware-Setup/dist/index.js"]`.)*
 
-**2) Antigravity 규칙 및 플러그인**
-- 프로젝트 루트의 [`GEMINI.md`](./GEMINI.md) 및 [`.agents/plugins/setup-guard/`](./.agents/plugins/setup-guard/)가 포함되어 있어, Antigravity가 패키지 설치·설정 파일 생성·메이저 업그레이드 시 자동으로 `setup-guard` 도구를 먼저 호출합니다.
+**Option 2: Native Antigravity Workspace Plugin & Rules**
+This repository ships with:
+- [`.agents/plugins/setup-guard/`](./.agents/plugins/setup-guard/) (`plugin.json`, `mcp_config.json`, `skills/setup-guard/SKILL.md`) — automatically discovered by Antigravity and invokable via `/setup-guard`.
+- [`GEMINI.md`](./GEMINI.md) — workspace rule that instructs Antigravity to run `detect_project_environment` before proposing setup commands.
 
 ---
 
-### B. OpenAI Codex (Codex CLI / Desktop App) 연동
+### B. OpenAI Codex (CLI & Desktop App)
 
-**1) CLI 명령어로 즉시 등록**
+**Option 1: Register via CLI**
 ```bash
 codex mcp add setup-guard -- npx -y setup-guard-mcp
 ```
 
-**2) `~/.codex/config.toml` 직접 설정**
+**Option 2: Configure `~/.codex/config.toml`**
 ```toml
 [mcp_servers.setup-guard]
 command = "npx"
@@ -68,100 +130,198 @@ enabled = true
 [mcp_servers.setup-guard.env]
 SETUP_GUARD_OFFLINE = "0"
 ```
-
-**3) `AGENTS.md` 자동 인식**
-- 저장소 루트의 [`AGENTS.md`](./AGENTS.md)에 정의된 워크플로우를 통해 Codex가 명령어 제안 전 반드시 `detect_project_environment`로 패키지 매니저(`pnpm`/`npm`/`yarn`/`bun`)와 버전을 먼저 확인합니다.
+This repository also includes [`AGENTS.md`](./AGENTS.md) so Codex automatically follows the version-aware verification workflow.
 
 ---
 
-### C. Claude Code / Cursor 연동
+### C. Claude Code & Claude Desktop
 
-- **Claude Code**:
-  ```bash
-  claude mcp add setup-guard -- npx -y setup-guard-mcp
-  ```
-- **Cursor (`.cursor/mcp.json`)**:
-  ```json
-  {
-    "mcpServers": {
-      "setup-guard": {
-        "command": "npx",
-        "args": ["-y", "setup-guard-mcp"]
-      }
+**Claude Code CLI:**
+```bash
+claude mcp add setup-guard -- npx -y setup-guard-mcp
+```
+
+**Claude Desktop (`claude_desktop_config.json`):**
+```json
+{
+  "mcpServers": {
+    "setup-guard": {
+      "command": "npx",
+      "args": ["-y", "setup-guard-mcp"]
     }
   }
-  ```
-
----
-
-## 3. 제공되는 5개 MCP Tool
-
-| Tool 이름 | 데이터 소스 | 핵심 역할 |
-| :--- | :--- | :--- |
-| `detect_project_environment` | 로컬 파일 파싱 (네트워크 불필요) | Node 버전(`.nvmrc`, `volta`, `engines`), 패키지 매니저(`packageManager` > Lockfile), 7대 코어 라이브러리 실제 버전(`node_modules` > Lockfile > `package.json`), 설정 패러다임(ESLint `flat_config`, Tailwind `v4_css_first`, Next.js `app_router`) 탐지 |
-| `check_dependency_compatibility` | npm Registry REST API + `semver` | `engines.node`, `peerDependencies`, `deprecated` 메타데이터를 실시간/캐시 대조하여 버전 충돌(`conflict`), 경고(`warning`), 미확인(`unverified`) 판정 |
-| `get_versioned_setup_guide` | SQLite FTS5 + PM 명령어 변환기 | 타겟 메이저 버전 및 프로젝트 패키지 매니저(`npm`/`pnpm`/`yarn`/`bun`)에 맞춘 설치 명령어, 설정 파일 템플릿, 출처 URL 반환 |
-| `get_upgrade_steps` | SQLite FTS5 (Migration / Release Notes) | `from_version` → `to_version` 구간의 필수 마이그레이션 단계, Breaking Changes, 공식 Codemod 명령어(`npx @next/codemod@canary`, `npx @tailwindcss/upgrade`) 및 출처 반환 |
-| `search_versioned_docs` | SQLite FTS5 (`unicode61` + `bm25`) | 특정 라이브러리·버전에 고정된 공식 마이그레이션/브레이킹 체인지 청크 검색 (`AND` → `OR` 2단계 폴백) |
-
----
-
-## 4. 초기 지원 범위 (Phase 1 MVP)
-
-- **지원 라이브러리 (7종)**: `node`, `typescript`, `react`, `nextjs`, `vite`, `tailwindcss`, `eslint`
-- **지원 패키지 매니저 (4종)**: `npm`, `pnpm`, `yarn` (Classic v1 & Berry v2+), `bun`
-- **대표 해결 시나리오**:
-  1. **Tailwind CSS v3 → v4**: `tailwind.config.js` 및 `@tailwind` 지시어 대신 `@import "tailwindcss";` CSS-first 설정 및 `@tailwindcss/vite` / `@tailwindcss/postcss` 안내
-  2. **ESLint v8 → v9**: `.eslintrc.*` 대신 `eslint.config.mjs` Flat Config 및 `typescript-eslint` 안내
-  3. **Next.js 14 → 15 & React 19**: 비동기 `cookies()`/`headers()`/`params`, Node.js 최소 버전(`>=18.18.0`), `peerDependencies` 충돌 검증
-  4. **패키지 매니저 일관성**: `pnpm-lock.yaml` 프로젝트에 `npm install` 대신 `pnpm add -D ...` 제안
-
----
-
-## 5. 아키텍처 및 디렉토리 구조
-
-```text
-setup-guard-mcp/
-├── src/
-│   ├── index.ts                     # CLI 엔트리포인트 (stdio MCP 서버 실행)
-│   ├── server.ts                    # 5개 MCP Tool 등록 및 핸들러 연결
-│   ├── types/                       # 공통 타입 및 Zod 입출력 스키마
-│   ├── detectors/                   # 로컬 환경/Lockfile/설정 패러다임 결정론적 파서
-│   ├── compatibility/               # npm registry 클라이언트 + semver 호환성 엔진
-│   ├── retrieval/                   # Node 내장 SQLite FTS5 (BM25) 검색 엔진
-│   ├── cache/                       # ~/.cache/setup-guard-mcp 캐시 & SHA-256 무결성 검증
-│   └── tools/                       # 5개 MCP Tool 비즈니스 로직
-├── indexer/                         # 마크다운 AST 청커 & FTS5 인덱스 빌더
-├── sources/js-ts.sources.yaml       # 태그 고정 공식 문서 수집 매니페스트
-├── seed/                            # 사전 빌드된 SQLite 인덱스 (index-js-ts.db, manifest.json)
-├── eval/                            # 골든 데이터셋(golden-dataset.jsonl) & 정량 평가 러너
-├── tests/                           # 통합 테스트 스위트
-├── .agents/plugins/setup-guard/     # Google Antigravity 네이티브 플러그인 번들
-├── AGENTS.md                        # OpenAI Codex / 에이전트 공통 지침
-└── GEMINI.md                        # Google Antigravity 워크스페이스 규칙
+}
 ```
 
 ---
 
-## 6. 로컬 빌드, 테스트 및 평가 실행
+### D. Cursor
+
+Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
+```json
+{
+  "mcpServers": {
+    "setup-guard": {
+      "command": "npx",
+      "args": ["-y", "setup-guard-mcp"]
+    }
+  }
+}
+```
+
+---
+
+## 4. MCP Tools Reference (5 Tools)
+
+### 1. `detect_project_environment`
+Inspects local project files without making any network requests.
+- **Input**:
+  - `project_path` (`string`, required): Absolute path to the project root containing `package.json`.
+- **Detects**:
+  - **Runtime**: `.nvmrc` > `.node-version` > `package.json#volta.node` > `.tool-versions` > `package.json#engines.node`
+  - **Package Manager**: `package.json#packageManager` > `pnpm-lock.yaml` > `bun.lock`/`bun.lockb` > `yarn.lock` (distinguishes Yarn Classic v1 vs. Berry v2+) > `package-lock.json`, plus exact CLI command templates (`pnpm add -D`, `pnpm dlx`, `bunx`, etc.)
+  - **Locked Dependency Versions**: Resolves actual installed versions via `node_modules/<pkg>/package.json` > Lockfile > `pnpm-workspace.yaml` catalog > `package.json`
+  - **Config Paradigms**: ESLint (`flat_config` vs. `legacy_eslintrc`), Tailwind CSS (`v4_css_first` vs. `v3_config_file`), Next.js (`app_router` / `pages_router` / `hybrid`), TypeScript (`tsconfig.json`), and Vite (`vite.config.*`).
+
+### 2. `check_dependency_compatibility`
+Deterministically validates cross-package compatibility against the npm registry (`Accept: application/vnd.npm.install-v1+json`) with local disk + ETag caching.
+- **Input**:
+  - `dependencies` (`Record<string, string>`, required): Production dependency map (e.g., `{"next": "15.0.3", "react": "18.2.0"}`).
+  - `devDependencies` (`Record<string, string>`, optional): Dev dependency map (e.g., `{"eslint": "9.14.0"}`).
+  - `runtime_version` (`string`, optional): Target Node.js version (e.g., `"18.17.0"`).
+- **Output**:
+  - `status`: `"ok"` | `"conflict"` | `"warning"` | `"unverified"`
+  - Detailed `issues` (`engine_mismatch`, `peer_dependency_conflict`, `missing_peer_dependency`), `deprecations`, and `unverified` items (such as `workspace:*` or `catalog:` specifiers) with official npm registry `source_url` links.
+
+### 3. `get_versioned_setup_guide`
+Returns citation-backed installation commands (translated to the project's package manager), configuration file templates, and obsolete patterns to avoid.
+- **Input**:
+  - `library` (`string`, required): Supported library name (`tailwindcss`, `eslint`, `nextjs`, `vite`, `react`, `typescript`, `node`).
+  - `target_version` (`string`, required): Explicit target version or single-major range (e.g., `"4.0.0"`, `"9.14.0"`).
+  - `package_manager` (`"npm" | "pnpm" | "yarn" | "bun"`, required)
+  - `runtime_version` (`string`, optional)
+  - `framework_context` (`"nextjs" | "vite" | "react" | "postcss" | "standalone"`, optional)
+
+### 4. `get_upgrade_steps`
+Retrieves ordered migration steps, breaking changes, and official codemod commands between two versions (`from_version` → `to_version`).
+- **Input**:
+  - `library` (`string`, required)
+  - `from_version` (`string`, required): Current version (e.g., `"3.4.1"`, `"8.57.0"`, `"14.2.0"`).
+  - `to_version` (`string`, required): Target version (e.g., `"4.0.0"`, `"9.14.0"`, `"15.0.3"`).
+  - `focus_area` (`string`, optional): Filter by topic or API (e.g., `"cookies"`, `"flat config"`, `"caching"`).
+  - `package_manager` (`"npm" | "pnpm" | "yarn" | "bun"`, optional)
+
+### 5. `search_versioned_docs`
+Executes a weighted SQLite FTS5 BM25 query (`bm25(doc_chunks_fts, 5.0, 3.0, 1.0)`) with two-pass `AND` → `OR` fallback against tag-pinned documentation chunks.
+- **Input**:
+  - `library` (`string`, required)
+  - `query` (`string`, required): Symbol, config key, or migration concept (e.g., `"async cookies headers"`, `"@theme"`, `"FlatCompat"`).
+  - `version` (`string`, optional): Target version. If omitted, `project_path` must be supplied to resolve the version from the project's lockfile/`package.json`.
+  - `project_path` (`string`, optional)
+  - `doc_types` (`Array<"migration_guide" | "release_note" | "deprecation" | "setup_guide">`, optional)
+  - `top_k` (`number`, optional, default `5`)
+
+---
+
+## 5. Supported Ecosystem (Phase 1)
+
+| Category | Supported Targets |
+| :--- | :--- |
+| **Libraries (7)** | `node`, `typescript`, `react`, `nextjs`, `vite`, `tailwindcss`, `eslint` |
+| **Package Managers (4)** | `npm`, `pnpm`, `yarn` (Classic v1 & Berry v2+), `bun` |
+| **Core Scenarios** | • Tailwind CSS v3 → v4 (`@import "tailwindcss"`, `@tailwindcss/vite`, `@theme`)<br/>• ESLint v8 → v9 (`eslint.config.mjs` Flat Config, `typescript-eslint`)<br/>• Next.js 14 → 15 & React 18 → 19 (`async` Request APIs, caching defaults, peer dependencies)<br/>• Vite v5 → v6 & TypeScript v5 setup/migration |
+
+---
+
+## 6. Safety & Epistemic Guardrails
+
+`setup-guard-mcp` enforces strict epistemic boundaries to prevent downstream agent hallucinations:
+
+1. **No Silent `"latest"` Substitution (`status: "ambiguous_version"`)**: When a version is omitted without a `project_path`, or when a range spans multiple majors (e.g., `>=13.0.0 <16.0.0` or `*`), the server refuses to guess `"latest"` and returns candidate versions for confirmation.
+2. **Zero Search Results ≠ Feature Removed (`status: "no_results_found"`)**: Because the corpus only indexes migration, deprecation, and breaking-change docs (excluding general tutorials/API references), `0` search matches returns `epistemic_notice: "NO_EVIDENCE_DO_NOT_ASSUME_REMOVED"`.
+3. **Explicit Unsupported Scope (`status: "unsupported_library"`)**: Queries for libraries outside the 7 supported targets immediately return `"unsupported_library"` with the supported list.
+4. **Read-Only Execution Boundary**: CLI commands and codemods are returned as structured data with `source_url` citations; the MCP server never executes shell commands or modifies user files.
+
+---
+
+## 7. Testing with MCP Inspector & Evaluation Suite
+
+### Build & Run Locally
 
 ```bash
-# 의존성 설치
+# 1. Install dependencies
 npm install
 
-# TypeScript 컴파일 + SQLite FTS5 시드 인덱스 빌드
+# 2. Compile TypeScript & build the SQLite FTS5 seed index
 npm run build
 
-# 통합 테스트 실행 (5개 핵심 시나리오 검증)
+# 3. Run the integration test suite (Vitest)
 npm test
 
-# 골든 데이터셋 검색 품질 및 가드레일 정량 평가
+# 4. Run the golden dataset retrieval & guardrail benchmark
 npm run eval
 ```
 
-### 정량 평가 지표 (`npm run eval`)
-- **`Recall@1`**: `1.0` (목표 `>= 0.70`)
-- **`Recall@5`**: `1.0` (목표 `>= 0.90`)
-- **`MRR@10`**: `1.0` (목표 `>= 0.80`)
-- **`Version Leakage Rate`**: `0.0` (타 메이저 버전 청크 혼입 0%)
-- **`Guardrails Passed`**: `true` (`ambiguous_version`, `unsupported_library`, `no_results_found` 안전장치 100% 통과)
+### Protocol Verification with Official MCP Inspector
+
+You can inspect and test all 5 tools interactively or via CLI using `@modelcontextprotocol/inspector`:
+
+```bash
+# Launch the interactive MCP Inspector Web UI
+npm run inspect
+
+# Run headless CLI verification (list tools)
+npm run inspect:cli
+
+# Call a specific tool over MCP Inspector CLI
+npx -y @modelcontextprotocol/inspector --cli node dist/index.js \
+  --method tools/call \
+  --tool-name detect_project_environment \
+  --tool-arg project_path="$(pwd)"
+```
+
+### Retrieval & Guardrail Benchmark Results (`npm run eval`)
+
+Evaluated against [`eval/golden-dataset.jsonl`](./eval/golden-dataset.jsonl):
+
+| Metric | Target | Result |
+| :--- | :--- | :--- |
+| **`Recall@1`** | `>= 0.70` | **`1.000`** |
+| **`Recall@5`** | `>= 0.90` | **`1.000`** |
+| **`MRR@10`** | `>= 0.80` | **`1.000`** |
+| **`Version Leakage Rate`** | `0.00` | **`0.000`** (0 cross-major chunk leaks) |
+| **`Guardrails Passed`** | `100%` | **`true`** (`ambiguous_version`, `unsupported_library`, `no_results_found`) |
+
+---
+
+## 8. Repository Structure
+
+```text
+Version-Aware-Setup/
+├── src/
+│   ├── index.ts                     # CLI entrypoint (stdio MCP transport)
+│   ├── server.ts                    # McpServer initialization & tool registration
+│   ├── types/                       # TypeScript interfaces & Zod schemas
+│   ├── detectors/                   # Deterministic parsers (PM, lockfiles, runtime, configs)
+│   ├── compatibility/               # npm registry client (ETag cache) & semver resolver
+│   ├── retrieval/                   # Node native SQLite FTS5 (BM25) search engine
+│   ├── cache/                       # ~/.cache/setup-guard-mcp manager & SHA-256 verifier
+│   ├── tools/                       # 5 MCP tool handlers
+│   └── utils/                       # stderr-only logger & version range analyzer
+├── indexer/                         # Markdown AST chunker & SQLite FTS5 index builder
+├── sources/js-ts.sources.yaml       # Tag-pinned official documentation manifest
+├── seed/                            # Precomputed SQLite FTS5 index & SHA-256 manifest
+├── eval/                            # Golden dataset (JSONL) & quantitative benchmark runner
+├── tests/                           # Vitest integration tests
+├── ci/workflows/                    # GitHub Actions workflow for index building & verification
+├── .agents/plugins/setup-guard/     # Native Google Antigravity plugin & skill bundle
+├── AGENTS.md                        # Agent instructions for OpenAI Codex & compatible hosts
+├── GEMINI.md                        # Workspace rule for Google Antigravity
+└── LICENSE                          # MIT License
+```
+
+---
+
+## 9. License
+
+This project is licensed under the [MIT License](./LICENSE).

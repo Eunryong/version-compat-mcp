@@ -2,7 +2,7 @@
   "mcpServers": {
     "setup-guard": {
       "command": "node",
-      "args": ["/Users/eunryong/develop/mcp/dist/index.js"],
+      "args": ["../../../dist/index.js"],
       "env": {
         "SETUP_GUARD_OFFLINE": "0"
       }
