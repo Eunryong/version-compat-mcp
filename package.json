@@ -22,15 +22,18 @@
     "AGENTS.md",
     "GEMINI.md",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=22.5.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && npm run build:index",
-    "build:ts": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && chmod +x dist/index.js && npm run build:index",
+    "build:ts": "tsc -p tsconfig.json && chmod +x dist/index.js",
     "build:index": "node --no-warnings ./node_modules/tsx/dist/cli.mjs indexer/build.ts",
+    "prepack": "npm run build",
     "start": "node --no-warnings dist/index.js",
     "dev": "node --no-warnings ./node_modules/tsx/dist/cli.mjs src/index.ts",
     "inspect": "npx -y @modelcontextprotocol/inspector node dist/index.js",
@@ -41,12 +44,14 @@
   "keywords": [
     "mcp",
     "model-context-protocol",
+    "mcp-server",
     "antigravity",
     "codex",
     "cursor",
     "claude-code",
     "migration",
     "semver",
+    "typescript",
     "nextjs",
     "tailwindcss",
     "eslint"

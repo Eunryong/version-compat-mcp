@@ -205,6 +205,72 @@ function buildIndex(): void {
   };
 
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf8");
+  fs.writeFileSync(
+    path.join(SEED_DIR, "index-js-ts.db.sha256"),
+    `${sha256}  index-js-ts.db\n`,
+    "utf8"
+  );
+
+  const UPSTREAM_LICENSES: Record<
+    string,
+    { repository: string; license: string }
+  > = {
+    nextjs: {
+      repository: "https://github.com/vercel/next.js",
+      license: "MIT",
+    },
+    react: {
+      repository: "https://github.com/facebook/react",
+      license: "MIT / CC-BY-4.0 (react.dev)",
+    },
+    tailwindcss: {
+      repository: "https://github.com/tailwindlabs/tailwindcss",
+      license: "MIT",
+    },
+    eslint: {
+      repository: "https://github.com/eslint/eslint",
+      license: "MIT",
+    },
+    vite: {
+      repository: "https://github.com/vitejs/vite",
+      license: "MIT",
+    },
+    typescript: {
+      repository: "https://github.com/microsoft/TypeScript",
+      license: "Apache-2.0",
+    },
+    node: {
+      repository: "https://github.com/nodejs/node",
+      license: "MIT",
+    },
+  };
+
+  const metadataPayload = {
+    collection: "js-ts",
+    version: "2026.10.15.1",
+    generated_at: nowIso,
+    embedding_model: "Xenova/bge-small-en-v1.5",
+    embedding_enabled_in_seed: false,
+    index_sha256: sha256,
+    total_chunks: totalChunks,
+    chunk_count_by_library: chunkCountByLibrary,
+    scope_policy:
+      "Only migration guides, release note breaking-change sections, and deprecation notices pinned to immutable Git tags are indexed. Full API references and tutorials are excluded.",
+    sources: INDEXED_VERSIONS_SEED.map((v) => ({
+      library: v.library,
+      version: v.version,
+      git_tag: v.git_tag,
+      release_date: v.release_date,
+      repository: UPSTREAM_LICENSES[v.library]?.repository ?? null,
+      upstream_license: UPSTREAM_LICENSES[v.library]?.license ?? "MIT",
+    })),
+  };
+
+  fs.writeFileSync(
+    path.join(SEED_DIR, "metadata.json"),
+    JSON.stringify(metadataPayload, null, 2),
+    "utf8"
+  );
 
   console.error(
     `[indexer] Built seed/index-js-ts.db (${rawBuffer.byteLength} bytes, gz: ${gzBuffer.byteLength} bytes, chunks: ${totalChunks}, sha256: ${sha256.slice(0, 16)}...)`
@@ -212,3 +278,4 @@ function buildIndex(): void {
 }
 
 buildIndex();
+

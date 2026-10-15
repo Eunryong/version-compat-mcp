@@ -1,0 +1,13 @@
+{
+  "name": "fixture-next15-pnpm",
+  "private": true,
+  "packageManager": "pnpm@9.12.2",
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

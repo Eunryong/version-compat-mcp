@@ -1,6 +1,6 @@
 {
   "manifest_version": 1,
-  "generated_at": "2026-10-15T07:37:29.208Z",
+  "generated_at": "2026-10-15T07:48:04.172Z",
   "min_client_version": "0.1.0",
   "embedding_config": {
     "enabled": false,
@@ -15,7 +15,7 @@
       "download_url": "https://github.com/Eunryong/Version-Aware-Setup/releases/download/index-v1/index-js-ts.db.gz",
       "compressed_size_bytes": 26056,
       "uncompressed_size_bytes": 147456,
-      "uncompressed_sha256": "43cd0834f42a990a0411c7eea254aeebbfda7aea9d50d4acc668344027d7f8f3",
+      "uncompressed_sha256": "5a0912c880471e7fbb6e1516f0284eda15a7b9bced6ed63dbcbc66402b30a181",
       "libraries": {
         "tailwindcss": {
           "majors": [

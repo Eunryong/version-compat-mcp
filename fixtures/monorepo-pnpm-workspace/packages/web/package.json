@@ -1,0 +1,12 @@
+{
+  "name": "@fixture/web",
+  "private": true,
+  "dependencies": {
+    "next": "catalog:",
+    "react": "catalog:",
+    "@fixture/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}
