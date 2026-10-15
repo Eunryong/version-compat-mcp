@@ -1,10 +1,10 @@
 {
   "collection": "js-ts",
   "version": "2026.10.15.1",
-  "generated_at": "2026-10-15T07:48:04.172Z",
+  "generated_at": "2026-10-15T07:49:51.140Z",
   "embedding_model": "Xenova/bge-small-en-v1.5",
   "embedding_enabled_in_seed": false,
-  "index_sha256": "5a0912c880471e7fbb6e1516f0284eda15a7b9bced6ed63dbcbc66402b30a181",
+  "index_sha256": "3d07652a56960a99f8911183c2f1a79b12f6ad0d8dd6b3f50f9ad8999b2c613f",
   "total_chunks": 26,
   "chunk_count_by_library": {
     "tailwindcss": 6,
