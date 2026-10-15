@@ -5,11 +5,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Eunryong/Version-Aware-Setup.git"
+    "url": "git+https://github.com/Eunryong/setup-guard-mcp.git"
   },
-  "homepage": "https://github.com/Eunryong/Version-Aware-Setup#readme",
+  "homepage": "https://github.com/Eunryong/setup-guard-mcp#readme",
   "bugs": {
-    "url": "https://github.com/Eunryong/Version-Aware-Setup/issues"
+    "url": "https://github.com/Eunryong/setup-guard-mcp/issues"
   },
   "type": "module",
   "bin": {

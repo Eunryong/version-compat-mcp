@@ -147,7 +147,7 @@ Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
   }
 }
 ```
-*(For local development before npm publish, use `"command": "node"` and `"args": ["/absolute/path/to/Version-Aware-Setup/dist/index.js"]`.)*
+*(For local development before npm publish, use `"command": "node"` and `"args": ["/absolute/path/to/setup-guard-mcp/dist/index.js"]`.)*
 
 ### D. Claude Code & Claude Desktop
 
@@ -200,7 +200,7 @@ Once `setup-guard-mcp` is connected to Cursor, Claude Code, Codex, or Antigravit
 - Indexed documents are strictly limited to migration guides, release notes, deprecation notices, and compatibility-related content. Full documentation websites and general tutorials are excluded.
 - Documentation sources are collected from official repositories or official documentation sites pinned to immutable Git tags (recorded in [`seed/metadata.json`](./seed/metadata.json)).
 - Third-party documentation remains subject to its original license, terms of service, and copyright policy. See [`NOTICE.md`](./NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for complete attribution details.
-- Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/Version-Aware-Setup/issues](https://github.com/Eunryong/Version-Aware-Setup/issues).
+- Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/setup-guard-mcp/issues](https://github.com/Eunryong/setup-guard-mcp/issues).
 
 ---
 

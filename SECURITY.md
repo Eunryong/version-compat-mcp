@@ -19,4 +19,4 @@
 
 ## 3. Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it via [GitHub Security Advisories](https://github.com/Eunryong/Version-Aware-Setup/security/advisories) or open a security issue on the repository rather than posting an exploit publicly.
+If you discover a security vulnerability, please report it via [GitHub Security Advisories](https://github.com/Eunryong/setup-guard-mcp/security/advisories) or open a security issue on the repository rather than posting an exploit publicly.

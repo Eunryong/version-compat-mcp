@@ -46,7 +46,7 @@ export interface ResolvedIndexInfo {
 
 const DEFAULT_MANIFEST_URL =
   process.env.SETUP_GUARD_MANIFEST_URL ||
-  "https://github.com/Eunryong/Version-Aware-Setup/releases/download/index-v1/manifest.json";
+  "https://github.com/Eunryong/setup-guard-mcp/releases/download/index-v1/manifest.json";
 
 const EXPECTED_LOCAL_EMBEDDING_MODEL = "Xenova/bge-small-en-v1.5";
 const EXPECTED_LOCAL_EMBEDDING_DIM = 384;
