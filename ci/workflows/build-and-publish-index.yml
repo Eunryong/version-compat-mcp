@@ -46,10 +46,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="index-v1"
+          ASSETS="seed/index-js-ts.db.gz seed/index-js-ts.db.sha256 seed/manifest.json seed/metadata.json"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" seed/index-js-ts.db.gz seed/manifest.json --clobber
+            gh release upload "$TAG" $ASSETS --clobber
           else
-            gh release create "$TAG" seed/index-js-ts.db.gz seed/manifest.json \
+            gh release create "$TAG" $ASSETS \
               --title "Setup Guard Precomputed Index (v1)" \
-              --notes "Automated precomputed SQLite FTS5 index and SHA-256 manifest for setup-guard-mcp."
+              --notes "Automated precomputed SQLite FTS5 index, SHA-256 checksum, manifest, and upstream attribution metadata for setup-guard-mcp."
           fi
