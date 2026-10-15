@@ -1,6 +1,6 @@
 {
   "manifest_version": 1,
-  "generated_at": "2026-10-15T12:09:59.834Z",
+  "generated_at": "2026-10-15T12:12:31.024Z",
   "min_client_version": "0.1.0",
   "embedding_config": {
     "enabled": false,
@@ -13,9 +13,9 @@
     "js-ts": {
       "version": "2026.10.15.1",
       "download_url": "https://github.com/Eunryong/version-compat-mcp/releases/download/index-v1/index-js-ts.db.gz",
-      "compressed_size_bytes": 26056,
+      "compressed_size_bytes": 26055,
       "uncompressed_size_bytes": 147456,
-      "uncompressed_sha256": "0ffd69449352cb98f42b665d020d1b684c6ffb8fd176a064516a0eda636ae4cf",
+      "uncompressed_sha256": "e1d93ea64bc3146381f6bf58615a6bca7893644bed76c49fd843831d24bb4d83",
       "libraries": {
         "tailwindcss": {
           "majors": [

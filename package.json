@@ -39,7 +39,7 @@
     "build": "tsc -p tsconfig.json && chmod +x dist/index.js && npm run build:index",
     "build:ts": "tsc -p tsconfig.json && chmod +x dist/index.js",
     "build:index": "node --no-warnings ./node_modules/tsx/dist/cli.mjs indexer/build.ts",
-    "build:mcpb": "npx -y @anthropic-ai/mcpb pack . version-compat-mcp.mcpb && npx -y @anthropic-ai/mcpb clean version-compat-mcp.mcpb && zip -u version-compat-mcp.mcpb manifest.json",
+    "build:mcpb": "node -e 'const fs=require(\"fs\");const m=fs.readFileSync(\"manifest.json\",\"utf8\");fs.writeFileSync(\"manifest.json.bak\",m);const d=JSON.parse(m);d.tools.forEach(t=>delete t.inputSchema);fs.writeFileSync(\"manifest.json\",JSON.stringify(d,null,2));' && npx -y @anthropic-ai/mcpb pack . version-compat-mcp.mcpb && npx -y @anthropic-ai/mcpb clean version-compat-mcp.mcpb && mv manifest.json.bak manifest.json && zip version-compat-mcp.mcpb manifest.json",
     "prepack": "npm run build",
     "start": "node --no-warnings dist/index.js",
     "dev": "node --no-warnings ./node_modules/tsx/dist/cli.mjs src/index.ts",
