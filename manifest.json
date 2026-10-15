@@ -43,23 +43,193 @@
   "tools": [
     {
       "name": "detect_project_environment",
-      "description": "Detect the project's Node.js runtime version, package manager (npm/pnpm/yarn/bun), locked dependency versions, and config paradigms (ESLint Flat Config, Tailwind v4 CSS-first, Next.js App Router)."
+      "description": "Detects Node.js runtime, package manager (npm/pnpm/yarn/bun), locked dependency versions, and config paradigms (ESLint flat config, Tailwind v4 CSS-first, Next.js App/Pages router, tsconfig) from local project files without network calls.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "project_path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Absolute path to the project or workspace package root directory containing package.json"
+          }
+        },
+        "required": [
+          "project_path"
+        ]
+      }
     },
     {
       "name": "check_dependency_compatibility",
-      "description": "Verify deterministic compatibility (engines.node, peerDependencies, and deprecations) against the npm registry with ETag caching."
+      "description": "Verifies engines.node, peerDependencies cross-compatibility, and deprecation notices deterministically using npm registry abbreviated metadata.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "dependencies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Map of production dependencies and their version or range (e.g. {\"next\": \"15.0.3\", \"react\": \"18.2.0\"})"
+          },
+          "devDependencies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional map of devDependencies and their version or range (e.g. {\"eslint\": \"9.14.0\", \"typescript\": \"5.7.2\"})"
+          },
+          "runtime_version": {
+            "type": "string",
+            "description": "Target Node.js runtime version (e.g. \"20.11.0\"). If omitted, engines.node checks are reported as unverified."
+          }
+        },
+        "required": [
+          "dependencies"
+        ]
+      }
     },
     {
       "name": "get_versioned_setup_guide",
-      "description": "Retrieve version-pinned installation commands formatted for the project's package manager and configuration templates."
+      "description": "Returns citation-backed installation commands (formatted for the project's package manager), initial configuration file examples, and obsolete patterns to avoid for a specific library version.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "library": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Target library name (supported: node, typescript, react, nextjs, vite, tailwindcss, eslint)"
+          },
+          "target_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Target version to set up (e.g. \"4.0.0\", \"15.0.3\", \"9.14.0\"). Do NOT pass \"latest\" without checking project versions."
+          },
+          "package_manager": {
+            "type": "string",
+            "enum": [
+              "npm",
+              "pnpm",
+              "yarn",
+              "bun"
+            ],
+            "description": "Project package manager detected from detect_project_environment"
+          },
+          "runtime_version": {
+            "type": "string",
+            "description": "Optional Node.js runtime version (e.g. \"20.11.0\")"
+          },
+          "framework_context": {
+            "type": "string",
+            "enum": [
+              "nextjs",
+              "vite",
+              "react",
+              "postcss",
+              "standalone"
+            ],
+            "description": "Optional host framework context (e.g. setting up tailwindcss v4 inside vite vs nextjs)"
+          }
+        },
+        "required": [
+          "library",
+          "target_version",
+          "package_manager"
+        ]
+      }
     },
     {
       "name": "get_upgrade_steps",
-      "description": "Retrieve tag-pinned breaking changes, migration steps, and official codemods between two versions of a library."
+      "description": "Retrieves step-by-step migration guides, breaking changes, and official codemod commands between two versions of a library (e.g. Tailwind v3 -> v4, ESLint v8 -> v9, Next.js v14 -> v15) with GitHub tag source URLs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "library": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Target library name (supported: node, typescript, react, nextjs, vite, tailwindcss, eslint)"
+          },
+          "from_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Current version before upgrade (e.g. \"3.4.1\", \"8.57.0\", \"14.2.0\")"
+          },
+          "to_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Target version after upgrade (e.g. \"4.0.0\", \"9.14.0\", \"15.0.3\")"
+          },
+          "focus_area": {
+            "type": "string",
+            "description": "Optional keyword or section filter (e.g. \"flat config\", \"caching\", \"async request\", \"postcss\")"
+          },
+          "package_manager": {
+            "type": "string",
+            "enum": [
+              "npm",
+              "pnpm",
+              "yarn",
+              "bun"
+            ],
+            "description": "Optional package manager to format codemod and upgrade commands accurately"
+          }
+        },
+        "required": [
+          "library",
+          "from_version",
+          "to_version"
+        ]
+      }
     },
     {
       "name": "search_versioned_docs",
-      "description": "Search tag-pinned migration guides, breaking changes, and deprecation notices for a specific library version."
+      "description": "Searches tag-pinned migration guides, release notes, and deprecation notices for a specific library version using SQLite FTS5 (BM25). Resolves version from project_path lockfile if version is omitted.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "library": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Target library name (supported: node, typescript, react, nextjs, vite, tailwindcss, eslint)"
+          },
+          "version": {
+            "type": "string",
+            "description": "Target library version (e.g. \"15.0.3\", \"4.0.0\"). If omitted, project_path must be provided to resolve version from lockfile/package.json."
+          },
+          "project_path": {
+            "type": "string",
+            "description": "Optional path to the project root so the tool can resolve the installed version from lockfile/package.json when version is omitted."
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Search query: config key, API symbol, error message, or migration topic"
+          },
+          "doc_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "migration_guide",
+                "release_note",
+                "deprecation",
+                "setup_guide"
+              ]
+            },
+            "description": "Optional filter by document type"
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Maximum number of chunks to return (default: 5)"
+          }
+        },
+        "required": [
+          "library",
+          "query"
+        ]
+      }
     }
   ],
   "compatibility": {

@@ -3,6 +3,7 @@
 > **"Your agent reads the wrong docs. `setup-guard` makes it read the right version."**
 
 [![npm version](https://img.shields.io/npm/v/setup-guard-mcp.svg)](https://www.npmjs.com/package/setup-guard-mcp)
+[![Smithery](https://img.shields.io/badge/Smithery-eunryong%2Fsetup--guard--mcp-orange.svg)](https://smithery.ai/servers/eunryong/setup-guard-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.5.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Stdio%20Server-purple.svg)](https://modelcontextprotocol.io/)
@@ -160,9 +161,9 @@ claude mcp add setup-guard -- npx -y setup-guard-mcp
 ### E. Smithery CLI
 
 ```bash
-npx -y @smithery/cli install setup-guard-mcp --client cursor
-# or for Claude Desktop:
-npx -y @smithery/cli install setup-guard-mcp --client claude
+npx -y smithery@latest mcp add eunryong/setup-guard-mcp --client cursor
+# or for Claude Desktop / Claude Code:
+npx -y smithery@latest mcp add eunryong/setup-guard-mcp --client claude
 ```
 
 ---
