@@ -1,0 +1,26 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP server.
+    # setup-guard-mcp requires zero API keys out of the box.
+    type: object
+    properties:
+      offlineMode:
+        type: boolean
+        default: false
+        description: "(Optional) When true, disables live npm registry lookups and relies exclusively on local cache and the bundled SQLite FTS5 index."
+      debug:
+        type: boolean
+        default: false
+        description: "(Optional) Enable diagnostic logging to stderr."
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.js'],
+      env: {
+        ...(config.offlineMode ? { SETUP_GUARD_OFFLINE: '1' } : {}),
+        ...(config.debug ? { DEBUG: 'true' } : {})
+      }
+    })

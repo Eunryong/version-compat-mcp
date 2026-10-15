@@ -1,6 +1,6 @@
 {
   "manifest_version": 1,
-  "generated_at": "2026-10-15T08:01:33.822Z",
+  "generated_at": "2026-10-15T08:12:38.922Z",
   "min_client_version": "0.1.0",
   "embedding_config": {
     "enabled": false,
@@ -15,7 +15,7 @@
       "download_url": "https://github.com/Eunryong/setup-guard-mcp/releases/download/index-v1/index-js-ts.db.gz",
       "compressed_size_bytes": 26056,
       "uncompressed_size_bytes": 147456,
-      "uncompressed_sha256": "e8fa2ee03afdd2f3278ec81d83961cf4d3dc541eb4d3dda563ba066ae4255f5f",
+      "uncompressed_sha256": "d43112831d672213371134151a268ab3f29f31a812b2e337c31ab8f160d68aa4",
       "libraries": {
         "tailwindcss": {
           "majors": [

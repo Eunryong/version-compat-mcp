@@ -2,6 +2,7 @@
 
 > **"Your agent reads the wrong docs. `setup-guard` makes it read the right version."**
 
+[![npm version](https://img.shields.io/npm/v/setup-guard-mcp.svg)](https://www.npmjs.com/package/setup-guard-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.5.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Stdio%20Server-purple.svg)](https://modelcontextprotocol.io/)
@@ -23,6 +24,7 @@
    - [OpenAI Codex (CLI & Desktop App)](#b-openai-codex-cli--desktop-app)
    - [Cursor](#c-cursor)
    - [Claude Code & Claude Desktop](#d-claude-code--claude-desktop)
+   - [Smithery CLI](#e-smithery-cli)
 5. [MCP Tools Reference (5 Tools)](#5-mcp-tools-reference-5-tools)
 6. [Real-World Prompt Examples](#6-real-world-prompt-examples)
 7. [Safety & Epistemic Guardrails](#7-safety--epistemic-guardrails)
@@ -153,6 +155,14 @@ Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
 
 ```bash
 claude mcp add setup-guard -- npx -y setup-guard-mcp
+```
+
+### E. Smithery CLI
+
+```bash
+npx -y @smithery/cli install setup-guard-mcp --client cursor
+# or for Claude Desktop:
+npx -y @smithery/cli install setup-guard-mcp --client claude
 ```
 
 ---
