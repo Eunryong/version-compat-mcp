@@ -42,7 +42,7 @@ Repository: [https://github.com/Eunryong/Version-Aware-Setup](https://github.com
   }
 }
 ```
-> 로컬 클론 경로에서 직접 실행하려면 `"command": "node"`, `"args": ["/절대/경로/Version-Aware-Setup/dist/src/index.js"]`로 설정할 수 있습니다.
+> 로컬 클론 경로에서 직접 실행하려면 `"command": "node"`, `"args": ["/절대/경로/Version-Aware-Setup/dist/index.js"]`로 설정할 수 있습니다.
 
 **2) Antigravity 규칙 및 플러그인**
 - 프로젝트 루트의 [`GEMINI.md`](./GEMINI.md) 및 [`.agents/plugins/setup-guard/`](./.agents/plugins/setup-guard/)가 포함되어 있어, Antigravity가 패키지 설치·설정 파일 생성·메이저 업그레이드 시 자동으로 `setup-guard` 도구를 먼저 호출합니다.

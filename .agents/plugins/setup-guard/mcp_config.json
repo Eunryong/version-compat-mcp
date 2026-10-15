@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "setup-guard": {
-      "command": "npx",
-      "args": ["-y", "setup-guard-mcp"],
+      "command": "node",
+      "args": ["/Users/eunryong/develop/mcp/dist/index.js"],
       "env": {
         "SETUP_GUARD_OFFLINE": "0"
       }
