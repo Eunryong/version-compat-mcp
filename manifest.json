@@ -1,0 +1,75 @@
+{
+  "manifest_version": "0.3",
+  "name": "setup-guard-mcp",
+  "display_name": "Setup Guard MCP",
+  "version": "0.1.0",
+  "description": "Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JS/TS Ecosystem.",
+  "long_description": "Your agent reads the wrong docs. setup-guard makes it read the right version. Analyzes your project's actual Node.js runtime, package manager (npm/pnpm/yarn/bun), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
+  "author": {
+    "name": "Eunryong",
+    "url": "https://github.com/Eunryong"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eunryong/setup-guard-mcp.git"
+  },
+  "homepage": "https://github.com/Eunryong/setup-guard-mcp#readme",
+  "documentation": "https://github.com/Eunryong/setup-guard-mcp#readme",
+  "support": "https://github.com/Eunryong/setup-guard-mcp/issues",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "migration",
+    "semver",
+    "typescript",
+    "nextjs",
+    "tailwindcss",
+    "eslint",
+    "react",
+    "vite"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "--no-warnings",
+        "${__dirname}/dist/index.js"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "detect_project_environment",
+      "description": "Detect the project's Node.js runtime version, package manager (npm/pnpm/yarn/bun), locked dependency versions, and config paradigms (ESLint Flat Config, Tailwind v4 CSS-first, Next.js App Router)."
+    },
+    {
+      "name": "check_dependency_compatibility",
+      "description": "Verify deterministic compatibility (engines.node, peerDependencies, and deprecations) against the npm registry with ETag caching."
+    },
+    {
+      "name": "get_versioned_setup_guide",
+      "description": "Retrieve version-pinned installation commands formatted for the project's package manager and configuration templates."
+    },
+    {
+      "name": "get_upgrade_steps",
+      "description": "Retrieve tag-pinned breaking changes, migration steps, and official codemods between two versions of a library."
+    },
+    {
+      "name": "search_versioned_docs",
+      "description": "Search tag-pinned migration guides, breaking changes, and deprecation notices for a specific library version."
+    }
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=22.5.0"
+    }
+  }
+}
