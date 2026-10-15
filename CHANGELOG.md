@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `setup-guard-mcp` will be documented in this file.
+All notable changes to `version-compat-mcp` will be documented in this file.
 
 ## [0.1.0] - 2026-10-15
 
@@ -17,6 +17,5 @@ All notable changes to `setup-guard-mcp` will be documented in this file.
   - `unsupported_library` status for out-of-scope packages.
   - Strict `stdio` hygiene (`stdout` reserved exclusively for JSON-RPC 2.0; diagnostics routed to `stderr` only when `DEBUG="true"`).
 - **Host Agent Integrations**:
-  - Native Google Antigravity plugin bundle (`.agents/plugins/setup-guard/`), `/setup-guard` skill, and `GEMINI.md`.
-  - OpenAI Codex `AGENTS.md` workflow rules.
+  - Google Antigravity workspace rules (`GEMINI.md`) and OpenAI Codex rules (`AGENTS.md`).
   - Comprehensive fixture suite (`fixtures/`), unit/protocol integration tests (`tests/`), and golden dataset evaluation benchmark (`eval/`).

@@ -195,7 +195,7 @@ function buildIndex(): void {
       "js-ts": {
         version: "2026.10.15.1",
         download_url:
-          "https://github.com/Eunryong/setup-guard-mcp/releases/download/index-v1/index-js-ts.db.gz",
+          "https://github.com/Eunryong/version-compat-mcp/releases/download/index-v1/index-js-ts.db.gz",
         compressed_size_bytes: gzBuffer.byteLength,
         uncompressed_size_bytes: rawBuffer.byteLength,
         uncompressed_sha256: sha256,

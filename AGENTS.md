@@ -1,4 +1,4 @@
-# Version-Aware Setup & Migration Rules (`setup-guard-mcp`)
+# Version-Aware Setup & Migration Rules (`version-compat-mcp`)
 
 This rule file applies to **OpenAI Codex (Codex CLI / App)**, **Google Antigravity (AGY)**, and other `AGENTS.md`-compatible coding agents.
 

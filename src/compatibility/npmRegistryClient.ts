@@ -71,7 +71,7 @@ export async function fetchNpmPackageMeta(
   try {
     const headers: Record<string, string> = {
       Accept: "application/vnd.npm.install-v1+json",
-      "User-Agent": "setup-guard-mcp/0.1.0",
+      "User-Agent": "version-compat-mcp/0.1.0",
     };
     if (diskEntry?.etag) {
       headers["If-None-Match"] = diskEntry.etag;

@@ -16,7 +16,7 @@ export function startCommand(config: SmitheryConfig = {}) {
     command: "node",
     args: [resolve(rootDir, "dist", "index.js")],
     env: {
-      ...(config.offlineMode ? { SETUP_GUARD_OFFLINE: "1" } : {}),
+      ...(config.offlineMode ? { VERSION_COMPAT_OFFLINE: "1" } : {}),
       ...(config.debug ? { DEBUG: "true" } : {}),
     },
   };

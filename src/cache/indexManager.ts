@@ -45,8 +45,9 @@ export interface ResolvedIndexInfo {
 }
 
 const DEFAULT_MANIFEST_URL =
+  process.env.VERSION_COMPAT_MANIFEST_URL ||
   process.env.SETUP_GUARD_MANIFEST_URL ||
-  "https://github.com/Eunryong/setup-guard-mcp/releases/download/index-v1/manifest.json";
+  "https://github.com/Eunryong/version-compat-mcp/releases/download/index-v1/manifest.json";
 
 const EXPECTED_LOCAL_EMBEDDING_MODEL = "Xenova/bge-small-en-v1.5";
 const EXPECTED_LOCAL_EMBEDDING_DIM = 384;
@@ -118,7 +119,10 @@ async function resolveIndexInternal(
   const cachedManifestPath = path.join(cacheDir, "manifest.json");
 
   // If offline mode is explicitly requested or in tests, use bundled seed if valid
-  if (process.env.SETUP_GUARD_OFFLINE === "1") {
+  if (
+    process.env.VERSION_COMPAT_OFFLINE === "1" ||
+    process.env.SETUP_GUARD_OFFLINE === "1"
+  ) {
     const seed = loadBundledFallback(collectionId);
     if (fs.existsSync(seed.dbPath)) {
       return seed;
@@ -131,7 +135,7 @@ async function resolveIndexInternal(
     const timer = setTimeout(() => controller.abort(), 2500);
 
     const res = await fetch(DEFAULT_MANIFEST_URL, {
-      headers: { "User-Agent": "setup-guard-mcp/0.1.0" },
+      headers: { "User-Agent": "version-compat-mcp/0.1.0" },
       signal: controller.signal,
     });
     clearTimeout(timer);
@@ -170,7 +174,7 @@ async function resolveIndexInternal(
         const dlController = new AbortController();
         const dlTimer = setTimeout(() => dlController.abort(), 8000);
         const dlRes = await fetch(collectionMeta.download_url, {
-          headers: { "User-Agent": "setup-guard-mcp/0.1.0" },
+          headers: { "User-Agent": "version-compat-mcp/0.1.0" },
           signal: dlController.signal,
         });
         clearTimeout(dlTimer);

@@ -14,7 +14,7 @@ import { handleGetUpgradeSteps } from "./tools/getUpgradeSteps.js";
 import { handleSearchVersionedDocs } from "./tools/searchVersionedDocs.js";
 
 const SERVER_INSTRUCTIONS = `
-setup-guard-mcp supplies deterministic, version-grounded setup, compatibility, and migration facts for JS/TS projects (Node.js, TypeScript, React, Next.js, Vite, Tailwind CSS, ESLint).
+version-compat-mcp supplies deterministic, version-grounded setup, compatibility, and migration facts for JS/TS projects (Node.js, TypeScript, React, Next.js, Vite, Tailwind CSS, ESLint).
 
 Mandatory workflow for host agents (Google Antigravity, OpenAI Codex, Claude Code, Cursor):
 1. Before suggesting package install commands, config files, or framework migrations, call 'detect_project_environment' on the workspace root to determine the exact package manager (npm/pnpm/yarn/bun), installed dependency versions, and config paradigms (e.g., ESLint Flat Config vs .eslintrc, Tailwind v4 CSS-first vs v3 tailwind.config.js).
@@ -26,10 +26,10 @@ Mandatory workflow for host agents (Google Antigravity, OpenAI Codex, Claude Cod
    - Always cite 'source_url' and state the 'resolved_version' in your response.
 `.trim();
 
-export function createSetupGuardServer(): McpServer {
+export function createVersionCompatServer(): McpServer {
   const server = new McpServer(
     {
-      name: "setup-guard-mcp",
+      name: "version-compat-mcp",
       version: "0.1.0",
     },
     {

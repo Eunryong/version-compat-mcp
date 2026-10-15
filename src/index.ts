@@ -4,8 +4,12 @@
  * Ensure nothing (including third-party libraries) ever writes non-protocol text to stdout.
  */
 console.log = (...args: unknown[]) => {
-  if (process.env.DEBUG === "true" || process.env.SETUP_GUARD_DEBUG === "1") {
-    process.stderr.write(`[setup-guard] ${args.map(String).join(" ")}\n`);
+  if (
+    process.env.DEBUG === "true" ||
+    process.env.VERSION_COMPAT_DEBUG === "1" ||
+    process.env.SETUP_GUARD_DEBUG === "1"
+  ) {
+    process.stderr.write(`[version-compat] ${args.map(String).join(" ")}\n`);
   }
 };
 
@@ -19,11 +23,11 @@ process.emitWarning = ((warning: string | Error, ...args: unknown[]) => {
 }) as typeof process.emitWarning;
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createSetupGuardServer } from "./server.js";
+import { createVersionCompatServer } from "./server.js";
 import { log, logger } from "./utils/logger.js";
 
 async function main(): Promise<void> {
-  const server = createSetupGuardServer();
+  const server = createVersionCompatServer();
   const transport = new StdioServerTransport();
 
   await server.connect(transport);
@@ -31,7 +35,7 @@ async function main(): Promise<void> {
 }
 
 main().catch((err) => {
-  logger.error("Fatal error starting setup-guard-mcp", {
+  logger.error("Fatal error starting version-compat-mcp", {
     error: err instanceof Error ? err.message : String(err),
   });
   process.exit(1);

@@ -16,7 +16,7 @@ describe("Tier 3: MCP Stdio Protocol Integration Test", () => {
       args: [SERVER_ENTRY],
       env: {
         ...process.env,
-        SETUP_GUARD_OFFLINE: "1",
+        VERSION_COMPAT_OFFLINE: "1",
       },
     });
 

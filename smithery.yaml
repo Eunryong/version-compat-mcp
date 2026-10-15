@@ -3,7 +3,7 @@ startCommand:
   type: stdio
   configSchema:
     # JSON Schema defining the configuration options for the MCP server.
-    # setup-guard-mcp requires zero API keys out of the box.
+    # version-compat-mcp requires zero API keys out of the box.
     type: object
     properties:
       offlineMode:
@@ -20,7 +20,7 @@ startCommand:
       command: 'node',
       args: ['dist/index.js'],
       env: {
-        ...(config.offlineMode ? { SETUP_GUARD_OFFLINE: '1' } : {}),
+        ...(config.offlineMode ? { VERSION_COMPAT_OFFLINE: '1' } : {}),
         ...(config.debug ? { DEBUG: 'true' } : {})
       }
     })

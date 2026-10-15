@@ -1,9 +1,9 @@
 ---
 trigger: always_on
-description: Enforce version-aware setup, package manager accuracy, and migration checks via setup-guard-mcp in Google Antigravity.
+description: Enforce version-aware setup, package manager accuracy, and migration checks via version-compat-mcp in Google Antigravity.
 ---
 
-# Antigravity Version-Aware Setup Guard (`GEMINI.md`)
+# Antigravity Version-Aware Setup & Compatibility (`GEMINI.md`)
 
 When assisting with JavaScript/TypeScript project setup, configuration, or dependency upgrades:
 

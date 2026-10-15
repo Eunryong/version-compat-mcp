@@ -4,6 +4,7 @@ eval/
 indexer/
 src/
 ci/
+.agent/
 .agents/
 .gemini/
 .git/

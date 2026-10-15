@@ -9,13 +9,13 @@ import { handleGetSetupGuideForMcp } from "../src/tools/mcpToolWrappers.js";
 import { handleGetUpgradeSteps } from "../src/tools/getUpgradeSteps.js";
 import { handleSearchVersionedDocs } from "../src/tools/searchVersionedDocs.js";
 
-process.env.SETUP_GUARD_OFFLINE = "1";
+process.env.VERSION_COMPAT_OFFLINE = "1";
 
-describe("setup-guard-mcp Phase 1 Core Tools", () => {
+describe("version-compat-mcp Phase 1 Core Tools", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "setup-guard-test-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "version-compat-test-"));
   });
 
   afterEach(() => {

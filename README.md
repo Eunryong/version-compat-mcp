@@ -1,23 +1,23 @@
-# setup-guard-mcp
+# version-compat-mcp
 
-> **"Your agent reads the wrong docs. `setup-guard` makes it read the right version."**
+> **"Your agent reads the wrong docs. `version-compat` makes it read the right version."**
 
-[![npm version](https://img.shields.io/npm/v/setup-guard-mcp.svg)](https://www.npmjs.com/package/setup-guard-mcp)
-[![Smithery](https://img.shields.io/badge/Smithery-eunryong%2Fsetup--guard--mcp-orange.svg)](https://smithery.ai/servers/eunryong/setup-guard-mcp)
+[![npm version](https://img.shields.io/npm/v/version-compat-mcp.svg)](https://www.npmjs.com/package/version-compat-mcp)
+[![Smithery](https://img.shields.io/badge/Smithery-eunryong%2Fversion--compat--mcp-orange.svg)](https://smithery.ai/servers/eunryong/version-compat-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.5.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-Stdio%20Server-purple.svg)](https://modelcontextprotocol.io/)
-[![Zero Config](https://img.shields.io/badge/API%20Key-Not%20Required-success.svg)](#1-why-setup-guard-mcp)
+[![Zero Config](https://img.shields.io/badge/API%20Key-Not%20Required-success.svg)](#1-why-version-compat-mcp-and-how-it-differs-from-generic-doc-mcps)
 
 **Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JavaScript/TypeScript Ecosystem.**
 
-`setup-guard-mcp` is not a generic documentation search engine. It is a local Model Context Protocol (MCP) server that analyzes your project's **actual Node.js runtime, package manager (`npm`/`pnpm`/`yarn`/`bun`), lockfile versions, and configuration files** to supply deterministic compatibility checks and tag-pinned migration facts to AI coding agents (**Google Antigravity**, **OpenAI Codex**, **Cursor**, **Claude Code**).
+`version-compat-mcp` is not a generic documentation search engine. It is a local Model Context Protocol (MCP) server that analyzes your project's **actual Node.js runtime, package manager (`npm`/`pnpm`/`yarn`/`bun`), lockfile versions, and configuration files** to supply deterministic compatibility checks and tag-pinned migration facts to AI coding agents (**Google Antigravity**, **OpenAI Codex**, **Cursor**, **Claude Code**).
 
 ---
 
 ## Table of Contents
 
-1. [Why `setup-guard-mcp`? (And How It Differs from Generic Doc MCPs)](#1-why-setup-guard-mcp-and-how-it-differs-from-generic-doc-mcps)
+1. [Why `version-compat-mcp`? (And How It Differs from Generic Doc MCPs)](#1-why-version-compat-mcp-and-how-it-differs-from-generic-doc-mcps)
 2. [Core Architecture](#2-core-architecture)
 3. [Supported Libraries & Versions](#3-supported-libraries--versions)
 4. [Quick Start & Host Agent Configuration](#4-quick-start--host-agent-configuration)
@@ -29,7 +29,7 @@
 5. [MCP Tools Reference (5 Tools)](#5-mcp-tools-reference-5-tools)
 6. [Real-World Prompt Examples](#6-real-world-prompt-examples)
 7. [Safety & Epistemic Guardrails](#7-safety--epistemic-guardrails)
-8. [Data Collection, Upstream Licenses & Attribution Policy](#8-data-collection-upstream-licenses--attribution-policy)
+8. [Data Collection, Upstream Licenses & Attribution Policy](#8-documentation-sources-and-data-policy)
 9. [Privacy & Security Policy](#9-privacy--security-policy)
 10. [Known Limitations & Roadmap](#10-known-limitations--roadmap)
 11. [Testing with MCP Inspector & Evaluation Suite](#11-testing-with-mcp-inspector--evaluation-suite)
@@ -37,7 +37,7 @@
 
 ---
 
-## 1. Why `setup-guard-mcp`? (And How It Differs from Generic Doc MCPs)
+## 1. Why `version-compat-mcp`? (And How It Differs from Generic Doc MCPs)
 
 Because LLM pre-training weights are frozen at a cutoff date, coding agents routinely make costly setup and migration errors:
 
@@ -46,9 +46,9 @@ Because LLM pre-training weights are frozen at a cutoff date, coding agents rout
 - **Next.js 15 & React 19**: Using synchronous `cookies()`, `headers()`, or `params` in **Next.js 15** (where Dynamic Request APIs are asynchronous `Promise`s), or proposing incompatible React 18 / Node.js combinations.
 - **Package Manager Mismatch**: Suggesting `npm install` in a repository locked with `pnpm-lock.yaml`, `bun.lock`, or `yarn.lock`.
 
-### How `setup-guard-mcp` Differs from General Documentation MCPs (e.g., Context7)
+### How `version-compat-mcp` Differs from General Documentation MCPs (e.g., Context7)
 
-| Dimension | Generic Documentation MCPs | `setup-guard-mcp` |
+| Dimension | Generic Documentation MCPs | `version-compat-mcp` |
 | :--- | :--- | :--- |
 | **Primary Goal** | Retrieve general API docs & tutorials | **Ground setup, compatibility & major version migrations in actual project state** |
 | **Project Awareness** | Unaware of local lockfiles, `.nvmrc`, or config style | Parses `package.json`, lockfiles, `.nvmrc`, `eslint.config.*`, `tsconfig.json` locally |
@@ -62,7 +62,7 @@ Because LLM pre-training weights are frozen at a cutoff date, coding agents rout
 
 ```mermaid
 flowchart LR
-    Agent["Host Agent<br/>(Antigravity / Codex / Cursor / Claude)"] <-->|"JSON-RPC 2.0 (stdio)"| Server["setup-guard-mcp"]
+    Agent["Host Agent<br/>(Antigravity / Codex / Cursor / Claude)"] <-->|"JSON-RPC 2.0 (stdio)"| Server["version-compat-mcp"]
 
     subgraph Deterministic["1. Deterministic Engine (Zero RAG / Zero Hallucination)"]
         Local["Local File & Lockfile Parser<br/>package.json, pnpm-lock.yaml,<br/>bun.lock, yarn.lock, .nvmrc"]
@@ -113,25 +113,25 @@ flowchart LR
 ```json
 {
   "mcpServers": {
-    "setup-guard": {
+    "version-compat": {
       "command": "npx",
-      "args": ["-y", "setup-guard-mcp"]
+      "args": ["-y", "version-compat-mcp"]
     }
   }
 }
 ```
-> **Workspace Plugin**: This repository also includes a native Antigravity plugin at [`.agents/plugins/setup-guard/`](./.agents/plugins/setup-guard/) and workspace rules in [`GEMINI.md`](./GEMINI.md).
+> **Workspace Rules**: This repository also includes workspace rules in [`GEMINI.md`](./GEMINI.md) and [`AGENTS.md`](./AGENTS.md).
 
 ### B. OpenAI Codex (CLI & Desktop App)
 
 ```bash
-codex mcp add setup-guard -- npx -y setup-guard-mcp
+codex mcp add version-compat -- npx -y version-compat-mcp
 ```
 Or in `~/.codex/config.toml`:
 ```toml
-[mcp_servers.setup-guard]
+[mcp_servers.version-compat]
 command = "npx"
-args = ["-y", "setup-guard-mcp"]
+args = ["-y", "version-compat-mcp"]
 startup_timeout_sec = 15
 tool_timeout_sec = 30
 enabled = true
@@ -143,27 +143,27 @@ Add to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global):
 ```json
 {
   "mcpServers": {
-    "setup-guard": {
+    "version-compat": {
       "command": "npx",
-      "args": ["-y", "setup-guard-mcp"]
+      "args": ["-y", "version-compat-mcp"]
     }
   }
 }
 ```
-*(For local development before npm publish, use `"command": "node"` and `"args": ["/absolute/path/to/setup-guard-mcp/dist/index.js"]`.)*
+*(For local development from a cloned repository, use `"command": "node"` and `"args": ["/absolute/path/to/version-compat-mcp/dist/index.js"]`.)*
 
 ### D. Claude Code & Claude Desktop
 
 ```bash
-claude mcp add setup-guard -- npx -y setup-guard-mcp
+claude mcp add version-compat -- npx -y version-compat-mcp
 ```
 
 ### E. Smithery CLI
 
 ```bash
-npx -y smithery@latest mcp add eunryong/setup-guard-mcp --client cursor
+npx -y smithery@latest mcp add eunryong/version-compat-mcp --client cursor
 # or for Claude Desktop / Claude Code:
-npx -y smithery@latest mcp add eunryong/setup-guard-mcp --client claude
+npx -y smithery@latest mcp add eunryong/version-compat-mcp --client claude
 ```
 
 ---
@@ -182,10 +182,10 @@ npx -y smithery@latest mcp add eunryong/setup-guard-mcp --client claude
 
 ## 6. Real-World Prompt Examples
 
-Once `setup-guard-mcp` is connected to Cursor, Claude Code, Codex, or Antigravity, try asking:
+Once `version-compat-mcp` is connected to Cursor, Claude Code, Codex, or Antigravity, try asking:
 
 1. **Environment & Compatibility Audit**
-   > *"Check the current project's Next.js, React, and Node.js versions using `setup-guard` and let me know if there are any peerDependency or engine compatibility issues."*
+   > *"Check the current project's Next.js, React, and Node.js versions using `version-compat` and let me know if there are any peerDependency or engine compatibility issues."*
 2. **Tailwind CSS v3 → v4 Upgrade**
    > *"We want to upgrade Tailwind CSS from v3.4 to v4.0 in this repository. Inspect our project environment first, then give me the exact migration steps, config changes, and commands for our package manager with official source URLs."*
 3. **ESLint v8 → v9 Flat Config Migration**
@@ -206,19 +206,19 @@ Once `setup-guard-mcp` is connected to Cursor, Claude Code, Codex, or Antigravit
 
 ## 8. Documentation Sources and Data Policy
 
-- `setup-guard-mcp` does **not** claim ownership of third-party documentation.
+- `version-compat-mcp` does **not** claim ownership of third-party documentation.
 - Every search result and migration guide step includes original `source_url` links and version metadata (`git_tag`, `version`, `collected_at`, `upstream_license`).
 - Indexed documents are strictly limited to migration guides, release notes, deprecation notices, and compatibility-related content. Full documentation websites and general tutorials are excluded.
 - Documentation sources are collected from official repositories or official documentation sites pinned to immutable Git tags (recorded in [`seed/metadata.json`](./seed/metadata.json)).
 - Third-party documentation remains subject to its original license, terms of service, and copyright policy. See [`NOTICE.md`](./NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for complete attribution details.
-- Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/setup-guard-mcp/issues](https://github.com/Eunryong/setup-guard-mcp/issues).
+- Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/version-compat-mcp/issues](https://github.com/Eunryong/version-compat-mcp/issues).
 
 ---
 
 ## 9. Privacy & Security Policy
 
 - **100% Local Execution**: Runs locally on your machine over `stdio`. No source code or `.env` files are ever read or uploaded.
-- **No Telemetry**: Zero analytics or tracking. Outbound network calls are limited to npm registry metadata lookups (`registry.npmjs.org`) and can be disabled completely via `SETUP_GUARD_OFFLINE=1`.
+- **No Telemetry**: Zero analytics or tracking. Outbound network calls are limited to npm registry metadata lookups (`registry.npmjs.org`) and can be disabled completely via `VERSION_COMPAT_OFFLINE=1`.
 - **SHA-256 Integrity**: Precomputed index databases are verified against [`seed/index-js-ts.db.sha256`](./seed/index-js-ts.db.sha256) and [`seed/manifest.json`](./seed/manifest.json) before loading.
 - See [`SECURITY.md`](./SECURITY.md) for full details.
 
@@ -228,7 +228,7 @@ Once `setup-guard-mcp` is connected to Cursor, Claude Code, Codex, or Antigravit
 
 - **Current Scope (Phase 1)**: Focused on the 7 core JS/TS libraries (`node`, `typescript`, `react`, `nextjs`, `vite`, `tailwindcss`, `eslint`) using SQLite FTS5 BM25 keyword/symbol retrieval.
 - **Phase 2 Roadmap**: Hybrid retrieval combining BM25 with local ONNX query embeddings (`transformers.js` + `sqlite-vec` using `Xenova/bge-small-en-v1.5`) and automated GitHub Actions release asset index updates.
-- **Phase 3 Roadmap**: Modular ecosystem collections (`@setup-guard/mcp-core` + on-demand ecosystem indexes) so large ecosystems can be downloaded selectively into `~/.cache/setup-guard-mcp/`.
+- **Phase 3 Roadmap**: Modular ecosystem collections (`@version-compat/mcp-core` + on-demand ecosystem indexes) so large ecosystems can be downloaded selectively into `~/.cache/version-compat-mcp/`.
 
 ---
 

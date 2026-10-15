@@ -1,6 +1,6 @@
 # Third-Party Documentation Notice
 
-This project (`setup-guard-mcp`) retrieves, indexes, and references concise excerpts from official migration guides, release notes, and compatibility notices of third-party open-source projects.
+This project (`version-compat-mcp`) retrieves, indexes, and references concise excerpts from official migration guides, release notes, and compatibility notices of third-party open-source projects.
 
 ## Indexed Documentation & Release Note Sources
 
@@ -44,8 +44,8 @@ Sources include:
 
 ## Data & Attribution Policy
 
-1. **No Claim of Ownership**: `setup-guard-mcp` does not claim copyright or ownership over any third-party documentation, migration guides, or release notes.
-2. **Mandatory Source Attribution**: Every search result and setup/migration step returned by `setup-guard-mcp`, as well as [`seed/metadata.json`](./seed/metadata.json), includes the original `source_url`, `git_tag`, `version`, `collected_at` timestamp, and `upstream_license`.
+1. **No Claim of Ownership**: `version-compat-mcp` does not claim copyright or ownership over any third-party documentation, migration guides, or release notes.
+2. **Mandatory Source Attribution**: Every search result and setup/migration step returned by `version-compat-mcp`, as well as [`seed/metadata.json`](./seed/metadata.json), includes the original `source_url`, `git_tag`, `version`, `collected_at` timestamp, and `upstream_license`.
 3. **Scoped Indexing**: Only migration guides, release notes, deprecation notices, and compatibility-critical configuration sections are indexed. Full documentation websites and general tutorials are excluded.
 4. **Subject to Original Terms**: All third-party documentation excerpts remain subject to their respective upstream licenses, terms of service, and copyright policies.
-5. **Takedown / Modification Requests**: If you are a maintainer of an upstream project and wish to update or remove any indexed excerpt, please open an issue at [https://github.com/Eunryong/setup-guard-mcp/issues](https://github.com/Eunryong/setup-guard-mcp/issues).
+5. **Takedown / Modification Requests**: If you are a maintainer of an upstream project and wish to update or remove any indexed excerpt, please open an issue at [https://github.com/Eunryong/version-compat-mcp/issues](https://github.com/Eunryong/version-compat-mcp/issues).

@@ -1,19 +1,19 @@
 {
-  "name": "setup-guard-mcp",
+  "name": "version-compat-mcp",
   "version": "0.1.0",
   "description": "Version-Aware Setup & Migration MCP Server for JS/TS ecosystems (Antigravity, Codex, Claude Code, Cursor)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Eunryong/setup-guard-mcp.git"
+    "url": "git+https://github.com/Eunryong/version-compat-mcp.git"
   },
-  "homepage": "https://github.com/Eunryong/setup-guard-mcp#readme",
+  "homepage": "https://github.com/Eunryong/version-compat-mcp#readme",
   "bugs": {
-    "url": "https://github.com/Eunryong/setup-guard-mcp/issues"
+    "url": "https://github.com/Eunryong/version-compat-mcp/issues"
   },
   "type": "module",
   "bin": {
-    "setup-guard-mcp": "dist/index.js"
+    "version-compat-mcp": "dist/index.js"
   },
   "files": [
     "dist",
@@ -29,7 +29,8 @@
     "CHANGELOG.md",
     "smithery.yaml",
     "smithery.ts",
-    "manifest.json"
+    "manifest.json",
+    "glama.json"
   ],
   "engines": {
     "node": ">=22.5.0"
@@ -38,7 +39,7 @@
     "build": "tsc -p tsconfig.json && chmod +x dist/index.js && npm run build:index",
     "build:ts": "tsc -p tsconfig.json && chmod +x dist/index.js",
     "build:index": "node --no-warnings ./node_modules/tsx/dist/cli.mjs indexer/build.ts",
-    "build:mcpb": "npx -y @anthropic-ai/mcpb pack . setup-guard-mcp.mcpb && npx -y @anthropic-ai/mcpb clean setup-guard-mcp.mcpb && zip -u setup-guard-mcp.mcpb manifest.json",
+    "build:mcpb": "npx -y @anthropic-ai/mcpb pack . version-compat-mcp.mcpb && npx -y @anthropic-ai/mcpb clean version-compat-mcp.mcpb && zip -u version-compat-mcp.mcpb manifest.json",
     "prepack": "npm run build",
     "start": "node --no-warnings dist/index.js",
     "dev": "node --no-warnings ./node_modules/tsx/dist/cli.mjs src/index.ts",

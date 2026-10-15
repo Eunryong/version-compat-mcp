@@ -51,6 +51,6 @@ jobs:
             gh release upload "$TAG" $ASSETS --clobber
           else
             gh release create "$TAG" $ASSETS \
-              --title "Setup Guard Precomputed Index (v1)" \
-              --notes "Automated precomputed SQLite FTS5 index, SHA-256 checksum, manifest, and upstream attribution metadata for setup-guard-mcp."
+              --title "Version Compat Precomputed Index (v1)" \
+              --notes "Automated precomputed SQLite FTS5 index, SHA-256 checksum, manifest, and upstream attribution metadata for version-compat-mcp."
           fi

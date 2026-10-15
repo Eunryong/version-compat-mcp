@@ -1,21 +1,21 @@
 {
   "manifest_version": "0.3",
-  "name": "setup-guard-mcp",
-  "display_name": "Setup Guard MCP",
+  "name": "version-compat-mcp",
+  "display_name": "Version Compat MCP",
   "version": "0.1.0",
   "description": "Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JS/TS Ecosystem.",
-  "long_description": "Your agent reads the wrong docs. setup-guard makes it read the right version. Analyzes your project's actual Node.js runtime, package manager (npm/pnpm/yarn/bun), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
+  "long_description": "Your agent reads the wrong docs. version-compat makes it read the right version. Analyzes your project's actual Node.js runtime, package manager (npm/pnpm/yarn/bun), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
   "author": {
     "name": "Eunryong",
     "url": "https://github.com/Eunryong"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Eunryong/setup-guard-mcp.git"
+    "url": "https://github.com/Eunryong/version-compat-mcp.git"
   },
-  "homepage": "https://github.com/Eunryong/setup-guard-mcp#readme",
-  "documentation": "https://github.com/Eunryong/setup-guard-mcp#readme",
-  "support": "https://github.com/Eunryong/setup-guard-mcp/issues",
+  "homepage": "https://github.com/Eunryong/version-compat-mcp#readme",
+  "documentation": "https://github.com/Eunryong/version-compat-mcp#readme",
+  "support": "https://github.com/Eunryong/version-compat-mcp/issues",
   "license": "MIT",
   "keywords": [
     "mcp",

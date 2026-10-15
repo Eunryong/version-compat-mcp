@@ -1,12 +1,12 @@
-# Contributing to `setup-guard-mcp`
+# Contributing to `version-compat-mcp`
 
-Thank you for your interest in contributing to `setup-guard-mcp`!
+Thank you for your interest in contributing to `version-compat-mcp`!
 
 ## 1. Core Design Principles
 
 Before submitting a Pull Request, please ensure your changes adhere to our core constraints:
 
-1. **Zero-Config & No API Keys**: The default path must work locally via `npx setup-guard-mcp` without requiring external LLM API keys.
+1. **Zero-Config & No API Keys**: The default path must work locally via `npx version-compat-mcp` without requiring external LLM API keys.
 2. **Strict `stdio` Hygiene**: Never call `console.log()` or write to `process.stdout` in `src/`. Use `log()` or `logger` from `src/utils/logger.ts`, which writes to `process.stderr` only when `DEBUG="true"` is set.
 3. **Structured vs. Unstructured Separation**:
    - Version compatibility (`engines.node`, `peerDependencies`, `deprecated`) and project environment detection must remain **100% deterministic** (`semver` + local file parsing).

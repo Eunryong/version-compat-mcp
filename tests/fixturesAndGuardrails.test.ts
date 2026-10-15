@@ -16,7 +16,7 @@ import { handleGetSetupGuideForMcp } from "../src/tools/mcpToolWrappers.js";
 import { handleSearchVersionedDocs } from "../src/tools/searchVersionedDocs.js";
 import { analyzeVersionSpec } from "../src/utils/versionUtils.js";
 
-process.env.SETUP_GUARD_OFFLINE = "1";
+process.env.VERSION_COMPAT_OFFLINE = "1";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -193,7 +193,7 @@ describe("Tier 4: Safety Guardrails & Failure Resilience", () => {
 
   it("handles missing package.json directory gracefully without throwing", () => {
     const emptyDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "setup-guard-empty-")
+      path.join(os.tmpdir(), "version-compat-empty-")
     );
     try {
       const res = handleDetectProjectEnvironment({ project_path: emptyDir });

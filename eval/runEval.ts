@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { handleSearchVersionedDocs } from "../src/tools/searchVersionedDocs.js";
 
-process.env.SETUP_GUARD_OFFLINE = "1";
+process.env.VERSION_COMPAT_OFFLINE = "1";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

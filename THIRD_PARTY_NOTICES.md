@@ -1,6 +1,6 @@
 # Third-Party Software & Model Notices
 
-`setup-guard-mcp` is licensed under the [MIT License](./LICENSE). It incorporates or interacts with the following third-party open-source packages and machine learning models:
+`version-compat-mcp` is licensed under the [MIT License](./LICENSE). It incorporates or interacts with the following third-party open-source packages and machine learning models:
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 3. Embedding Model Metadata (Phase 2 Hybrid Search)
 
-When local query embedding is enabled (Phase 2), `setup-guard-mcp` uses the following open-weights embedding model recorded in [`seed/manifest.json`](./seed/manifest.json):
+When local query embedding is enabled (Phase 2), `version-compat-mcp` uses the following open-weights embedding model recorded in [`seed/manifest.json`](./seed/manifest.json):
 
 | Model | License | Source |
 |---|---|---|
