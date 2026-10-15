@@ -193,13 +193,14 @@ Once `setup-guard-mcp` is connected to Cursor, Claude Code, Codex, or Antigravit
 
 ---
 
-## 8. Data Collection, Upstream Licenses & Attribution Policy
+## 8. Documentation Sources and Data Policy
 
-To respect upstream open-source licenses and copyright:
-
-1. **Scoped Excerpts Only**: `setup-guard-mcp` does **not** redistribute full documentation websites or tutorials. It indexes only concise migration guide sections, breaking change notes, and deprecation notices pinned to immutable Git tags.
-2. **Full Attribution Metadata**: Every returned chunk and [`seed/metadata.json`](./seed/metadata.json) records the upstream `library`, `version`, `git_tag`, `source_url`, `collected_at`, and `upstream_license` (MIT for Next.js, Tailwind CSS, ESLint, Vite, Node.js; MIT / CC-BY-4.0 for React; Apache-2.0 for TypeScript).
-3. **Takedown & Exclusion Policy**: Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/Version-Aware-Setup/issues](https://github.com/Eunryong/Version-Aware-Setup/issues).
+- `setup-guard-mcp` does **not** claim ownership of third-party documentation.
+- Every search result and migration guide step includes original `source_url` links and version metadata (`git_tag`, `version`, `collected_at`, `upstream_license`).
+- Indexed documents are strictly limited to migration guides, release notes, deprecation notices, and compatibility-related content. Full documentation websites and general tutorials are excluded.
+- Documentation sources are collected from official repositories or official documentation sites pinned to immutable Git tags (recorded in [`seed/metadata.json`](./seed/metadata.json)).
+- Third-party documentation remains subject to its original license, terms of service, and copyright policy. See [`NOTICE.md`](./NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md) for complete attribution details.
+- Upstream maintainers can request modification or removal of any indexed snapshot by opening an issue at [https://github.com/Eunryong/Version-Aware-Setup/issues](https://github.com/Eunryong/Version-Aware-Setup/issues).
 
 ---
 
@@ -246,4 +247,5 @@ npm pack --dry-run
 
 ## 12. License
 
-Licensed under the [MIT License](./LICENSE).
+MIT License. See [`LICENSE`](./LICENSE) for details.
+For third-party documentation and software/model attribution, see [`NOTICE.md`](./NOTICE.md) and [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md).
