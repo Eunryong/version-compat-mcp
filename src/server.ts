@@ -30,7 +30,7 @@ export function createVersionCompatServer(): McpServer {
   const server = new McpServer(
     {
       name: "version-compat-mcp",
-      version: "0.1.0",
+      version: "0.1.1",
     },
     {
       instructions: SERVER_INSTRUCTIONS,

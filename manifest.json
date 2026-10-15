@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "version-compat-mcp",
   "display_name": "Version Compat MCP",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JS/TS Ecosystem.",
   "long_description": "Your agent reads the wrong docs. version-compat makes it read the right version. Analyzes your project's actual Node.js runtime, package manager (npm/pnpm/yarn/bun), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
   "author": {

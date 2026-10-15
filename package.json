@@ -1,6 +1,7 @@
 {
   "name": "version-compat-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "io.github.Eunryong/version-compat-mcp",
   "description": "Version-Aware Setup & Migration MCP Server for JS/TS ecosystems (Antigravity, Codex, Claude Code, Cursor)",
   "license": "MIT",
   "repository": {
@@ -30,7 +31,8 @@
     "smithery.yaml",
     "smithery.ts",
     "manifest.json",
-    "glama.json"
+    "glama.json",
+    "server.json"
   ],
   "engines": {
     "node": ">=22.5.0"
