@@ -140,7 +140,7 @@ function buildIndex(): void {
   db.exec(`ANALYZE;`);
   db.close();
 
-  // Quality gate: verify all 7 libraries have chunks
+  // Quality gate: verify all 13 libraries have chunks
   const requiredLibs = [
     "tailwindcss",
     "eslint",
@@ -149,6 +149,12 @@ function buildIndex(): void {
     "vite",
     "typescript",
     "node",
+    "python",
+    "pydantic",
+    "fastapi",
+    "sqlalchemy",
+    "langchain",
+    "uv",
   ];
   for (const lib of requiredLibs) {
     if (!chunkCountByLibrary[lib] || chunkCountByLibrary[lib] < 1) {
@@ -242,6 +248,30 @@ function buildIndex(): void {
     node: {
       repository: "https://github.com/nodejs/node",
       license: "MIT",
+    },
+    python: {
+      repository: "https://github.com/python/cpython",
+      license: "PSF-2.0",
+    },
+    pydantic: {
+      repository: "https://github.com/pydantic/pydantic",
+      license: "MIT",
+    },
+    fastapi: {
+      repository: "https://github.com/fastapi/fastapi",
+      license: "MIT",
+    },
+    sqlalchemy: {
+      repository: "https://github.com/sqlalchemy/sqlalchemy",
+      license: "MIT",
+    },
+    langchain: {
+      repository: "https://github.com/langchain-ai/langchain",
+      license: "MIT",
+    },
+    uv: {
+      repository: "https://github.com/astral-sh/uv",
+      license: "MIT / Apache-2.0",
     },
   };
 

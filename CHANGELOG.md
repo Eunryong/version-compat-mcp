@@ -2,6 +2,18 @@
 
 All notable changes to `version-compat-mcp` will be documented in this file.
 
+## [0.2.0] - 2026-10-25
+
+### Added
+- **Python Ecosystem Support**:
+  - Full support for Python runtimes (`python` 3.10, 3.11, 3.12, 3.13) detected via `.python-version`, `pyproject.toml`, `Pipfile`, `.tool-versions`, and `runtime.txt`.
+  - Python package manager detection and command templates for `uv`, `poetry`, and `pip`, including bidirectional npm-to-python command translations.
+  - Dependency parsing for `uv.lock`, `poetry.lock`, `requirements.txt`, and `pyproject.toml` (PEP 621 dependencies & optional-dependencies).
+  - Packaging configuration paradigm detection (`pep621`, `poetry`, `flit`, `pipenv`, `requirements`, build backend, and `uv_enabled`).
+  - PyPI compatibility verification via `pypiRegistryClient` checking `requires_python` against project Python runtime, PEP 440 range satisfaction, disk/memory caching with HTTP ETag/Conditional GET, and yanked release detection.
+  - Curated setup guides, migration steps, and tag-pinned docs for **FastAPI** (lifespan handlers vs deprecated on_event), **Pydantic** (v1 to v2 migration, ConfigDict, model_validator), **SQLAlchemy** (2.0 declarative base and select execution), **LangChain** (0.1, 0.2, 0.3 modular split), and **uv** (workspaces, inline script metadata).
+  - Golden evaluation cases expanded to 28 queries with 100% Recall@1, 3, 5 and MRR@10.
+
 ## [0.1.0] - 2026-10-15
 
 ### Added

@@ -2,17 +2,17 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Eunryong/version-compat-mcp",
   "title": "Version Compat MCP",
-  "description": "Version-aware setup, dependency compatibility & migration MCP server for JS/TS projects.",
+  "description": "Version-aware setup, compatibility & migration MCP server for JS/TS and Python projects.",
   "repository": {
     "url": "https://github.com/Eunryong/version-compat-mcp",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "0.2.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "version-compat-mcp",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       }

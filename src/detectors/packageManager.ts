@@ -16,6 +16,10 @@ const LOCKFILE_CANDIDATES: Array<{
   { filename: "yarn.lock", pm: "yarn" },
   { filename: "package-lock.json", pm: "npm" },
   { filename: "npm-shrinkwrap.json", pm: "npm" },
+  { filename: "uv.lock", pm: "uv" },
+  { filename: "poetry.lock", pm: "poetry" },
+  { filename: "Pipfile.lock", pm: "pip" },
+  { filename: "requirements.txt", pm: "pip" },
 ];
 
 export function buildCommandTemplates(
@@ -23,6 +27,30 @@ export function buildCommandTemplates(
   yarnVariant: "classic" | "berry" | "standard" = "standard"
 ): CommandTemplates {
   switch (pm) {
+    case "uv":
+      return {
+        install_prod: "uv add <pkg>",
+        install_dev: "uv add --dev <pkg>",
+        exec_local: "uv run <cmd>",
+        exec_dlx: "uvx <pkg>",
+        run_script: "uv run <script>",
+      };
+    case "poetry":
+      return {
+        install_prod: "poetry add <pkg>",
+        install_dev: "poetry add --group dev <pkg>",
+        exec_local: "poetry run <cmd>",
+        exec_dlx: "poetry run <cmd>",
+        run_script: "poetry run <script>",
+      };
+    case "pip":
+      return {
+        install_prod: "pip install <pkg>",
+        install_dev: "pip install <pkg>",
+        exec_local: "python -m <cmd>",
+        exec_dlx: "pipx run <pkg>",
+        run_script: "python <script>",
+      };
     case "pnpm":
       return {
         install_prod: "pnpm add <pkg>",
@@ -68,6 +96,54 @@ export function translateNpmCommand(
   const trimmed = npmCommand.trim();
   if (pm === "npm") return trimmed;
 
+  // Handle Python PM translations
+  if (pm === "uv") {
+    if (trimmed.startsWith("npx ")) return `uvx ${trimmed.slice(4).trim()}`;
+    if (trimmed.startsWith("pip install -r ")) return `uv sync`;
+    const pipMatch = trimmed.match(/^pip\s+install\s+(.+)$/);
+    if (pipMatch) return `uv add ${pipMatch[1]}`;
+    const devMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(?:-D|--save-dev)\s+(.+)$/);
+    if (devMatch) return `uv add --dev ${devMatch[1]}`;
+    const prodMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(.+)$/);
+    if (prodMatch) return `uv add ${prodMatch[1]}`;
+    if (trimmed.startsWith("poetry add --group dev ")) return `uv add --dev ${trimmed.slice(23).trim()}`;
+    if (trimmed.startsWith("poetry add ")) return `uv add ${trimmed.slice(11).trim()}`;
+    return trimmed;
+  }
+
+  if (pm === "poetry") {
+    if (trimmed.startsWith("npx ") || trimmed.startsWith("uvx ")) {
+      const rest = trimmed.replace(/^(?:npx|uvx)\s+/, "").trim();
+      return `poetry run ${rest}`;
+    }
+    const pipMatch = trimmed.match(/^pip\s+install\s+(.+)$/);
+    if (pipMatch) return `poetry add ${pipMatch[1]}`;
+    if (trimmed.startsWith("uv add --dev ")) return `poetry add --group dev ${trimmed.slice(13).trim()}`;
+    if (trimmed.startsWith("uv add ")) return `poetry add ${trimmed.slice(7).trim()}`;
+    const devMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(?:-D|--save-dev)\s+(.+)$/);
+    if (devMatch) return `poetry add --group dev ${devMatch[1]}`;
+    const prodMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(.+)$/);
+    if (prodMatch) return `poetry add ${prodMatch[1]}`;
+    return trimmed;
+  }
+
+  if (pm === "pip") {
+    if (trimmed.startsWith("uv add --dev ")) return `pip install ${trimmed.slice(13).trim()}`;
+    if (trimmed.startsWith("uv add ")) return `pip install ${trimmed.slice(7).trim()}`;
+    if (trimmed.startsWith("poetry add --group dev ")) return `pip install ${trimmed.slice(23).trim()}`;
+    if (trimmed.startsWith("poetry add ")) return `pip install ${trimmed.slice(11).trim()}`;
+    if (trimmed.startsWith("npx ") || trimmed.startsWith("uvx ")) {
+      const rest = trimmed.replace(/^(?:npx|uvx)\s+/, "").trim();
+      return `pipx run ${rest}`;
+    }
+    const devMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(?:-D|--save-dev)\s+(.+)$/);
+    if (devMatch) return `pip install ${devMatch[1]}`;
+    const prodMatch = trimmed.match(/^npm\s+(?:install|i|add)\s+(.+)$/);
+    if (prodMatch) return `pip install ${prodMatch[1]}`;
+    return trimmed;
+  }
+
+  // Handle JS PM translations
   // Handle npx <pkg> ...
   if (trimmed.startsWith("npx ")) {
     const rest = trimmed.slice(4).trim();
@@ -232,7 +308,38 @@ export function detectPackageManager(
     };
   }
 
-  // Priority 3: Default fallback to npm
+  // Priority 3: pyproject.toml without lockfile
+  const pyprojectPath = path.join(projectPath, "pyproject.toml");
+  if (fs.existsSync(pyprojectPath)) {
+    try {
+      const content = fs.readFileSync(pyprojectPath, "utf8");
+      if (content.includes("[tool.poetry]")) {
+        return {
+          name: "poetry",
+          variant: "standard",
+          version: null,
+          detected_from: "pyproject.toml",
+          lockfiles_found: lockfileNames,
+          multiple_lockfiles_warning: multipleLockfilesWarning,
+          command_templates: buildCommandTemplates("poetry", "standard"),
+        };
+      }
+    } catch {
+      // ignore
+    }
+
+    return {
+      name: "uv",
+      variant: "standard",
+      version: null,
+      detected_from: "pyproject.toml",
+      lockfiles_found: lockfileNames,
+      multiple_lockfiles_warning: multipleLockfilesWarning,
+      command_templates: buildCommandTemplates("uv", "standard"),
+    };
+  }
+
+  // Priority 4: Default fallback to npm
   return {
     name: "npm",
     variant: "standard",

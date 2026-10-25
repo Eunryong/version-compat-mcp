@@ -1,8 +1,8 @@
 {
   "name": "version-compat-mcp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "mcpName": "io.github.Eunryong/version-compat-mcp",
-  "description": "Version-Aware Setup & Migration MCP Server for JS/TS ecosystems (Antigravity, Codex, Claude Code, Cursor)",
+  "description": "Version-Aware Setup & Migration MCP Server for JS/TS & Python ecosystems (Antigravity, Codex, Claude Code, Cursor)",
   "license": "MIT",
   "repository": {
     "type": "git",

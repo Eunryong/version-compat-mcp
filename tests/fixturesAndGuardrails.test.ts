@@ -56,6 +56,23 @@ describe("Tier 1 & 2: Fixture Projects & Deterministic Unit Logic", () => {
     expect(res.config_paradigms.nextjs.router_mode).toBe("app_router");
   });
 
+  it("detects python-fastapi-uv fixture (.python-version, uv.lock, PEP 621 pyproject.toml, exact lockfile versions)", () => {
+    const res = handleDetectProjectEnvironment({
+      project_path: fixturePath("python-fastapi-uv"),
+    });
+    expect(res.status).toBe("ok");
+    expect(res.runtime.python?.resolved_version).toBe("3.12.7");
+    expect(res.runtime.python?.source).toBe(".python-version");
+    expect(res.package_manager.name).toBe("uv");
+    expect(res.package_manager.command_templates.install_prod).toBe("uv add <pkg>");
+    expect(res.core_dependencies.fastapi?.resolved_version).toBe("0.115.6");
+    expect(res.core_dependencies.fastapi?.resolution_source).toBe("uv.lock");
+    expect(res.core_dependencies.pydantic?.resolved_version).toBe("2.10.6");
+    expect(res.core_dependencies.sqlalchemy?.resolved_version).toBe("2.0.36");
+    expect(res.config_paradigms.python?.packaging_standard).toBe("pep621");
+    expect(res.config_paradigms.python?.uv_enabled).toBe(true);
+  });
+
   it("distinguishes tailwind-v3 vs tailwind-v4 fixtures accurately", () => {
     const v3 = handleDetectProjectEnvironment({
       project_path: fixturePath("tailwind-v3"),
@@ -138,6 +155,83 @@ describe("Tier 1 & 2: Fixture Projects & Deterministic Unit Logic", () => {
         "berry"
       )
     ).toBe("yarn dlx @eslint/migrate-config .eslintrc.json");
+    expect(
+      translateNpmCommand("npm install fastapi pydantic", "uv")
+    ).toBe("uv add fastapi pydantic");
+    expect(
+      translateNpmCommand("npm install -D pytest ruff", "uv")
+    ).toBe("uv add --dev pytest ruff");
+    expect(
+      translateNpmCommand("npm install fastapi", "poetry")
+    ).toBe("poetry add fastapi");
+    expect(
+      translateNpmCommand("npm install fastapi", "pip")
+    ).toBe("pip install fastapi");
+  });
+
+  it("provides versioned setup guide for Pydantic v2 and FastAPI with uv package manager", async () => {
+    const guide = await handleGetSetupGuideForMcp({
+      library: "pydantic",
+      target_version: "2.10.6",
+      package_manager: "uv",
+    });
+    expect(guide.status).toBe("ok");
+    expect((guide.install_commands as Array<{ command: string }>)[0].command).toContain("uv add");
+    expect(guide.obsolete_patterns_to_avoid).toEqual(
+      expect.arrayContaining([expect.stringContaining(".dict()")])
+    );
+  });
+
+  it("searches versioned docs for FastAPI lifespan and SQLAlchemy 2.0 select", async () => {
+    const res = await handleSearchVersionedDocs({
+      library: "fastapi",
+      version: "0.115.6",
+      query: "lifespan context manager startup",
+    });
+    expect(res.status).toBe("ok");
+    expect((res.results as unknown[]).length).toBeGreaterThan(0);
+    expect(((res.results as Array<{ content: string }>)[0]).content).toContain("lifespan");
+  });
+
+  it("verifies PyPI compatibility and detects Python runtime engine mismatch", async () => {
+    const mockPypiFetcher = async (pkg: string) => {
+      if (pkg === "fastapi") {
+        return {
+          info: {
+            name: "fastapi",
+            version: "0.115.6",
+            requires_python: ">=3.8",
+          },
+          releases: {
+            "0.115.6": [{ requires_python: ">=3.8" }],
+          },
+        };
+      }
+      return null;
+    };
+
+    const bad = await handleCheckDependencyCompatibility(
+      {
+        dependencies: { fastapi: "0.115.6" },
+        runtime_version: "3.7.0",
+      },
+      undefined,
+      mockPypiFetcher
+    );
+    expect(bad.compatible).toBe(false);
+    expect(bad.conflicts[0].type).toBe("engine_mismatch");
+    expect(bad.conflicts[0].requirement).toContain(">=3.8");
+
+    const good = await handleCheckDependencyCompatibility(
+      {
+        dependencies: { fastapi: "0.115.6" },
+        runtime_version: "3.12.0",
+      },
+      undefined,
+      mockPypiFetcher
+    );
+    expect(good.compatible).toBe(true);
+    expect(good.conflicts.length).toBe(0);
   });
 
   it("analyzes single-major vs multi-major ambiguous semver ranges", () => {

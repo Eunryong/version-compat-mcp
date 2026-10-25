@@ -9,9 +9,9 @@
 [![MCP](https://img.shields.io/badge/MCP-Stdio%20Server-purple.svg)](https://modelcontextprotocol.io/)
 [![Zero Config](https://img.shields.io/badge/API%20Key-Not%20Required-success.svg)](#1-why-version-compat-mcp-and-how-it-differs-from-generic-doc-mcps)
 
-**Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JavaScript/TypeScript Ecosystem.**
+**Version-Aware Setup, Dependency Compatibility & Migration MCP Server for JavaScript/TypeScript & Python Ecosystems.**
 
-`version-compat-mcp` is not a generic documentation search engine. It is a local Model Context Protocol (MCP) server that analyzes your project's **actual Node.js runtime, package manager (`npm`/`pnpm`/`yarn`/`bun`), lockfile versions, and configuration files** to supply deterministic compatibility checks and tag-pinned migration facts to AI coding agents (**Google Antigravity**, **OpenAI Codex**, **Cursor**, **Claude Code**).
+`version-compat-mcp` is not a generic documentation search engine. It is a local Model Context Protocol (MCP) server that analyzes your project's **actual Node.js & Python runtimes, package managers (`npm`/`pnpm`/`yarn`/`bun`/`uv`/`poetry`/`pip`), lockfile versions, and configuration files** to supply deterministic compatibility checks and tag-pinned migration facts to AI coding agents (**Google Antigravity**, **OpenAI Codex**, **Cursor**, **Claude Code**).
 
 ---
 
@@ -44,15 +44,16 @@ Because LLM pre-training weights are frozen at a cutoff date, coding agents rout
 - **Tailwind CSS v4 vs. v3**: Proposing `npx tailwindcss init -p`, `tailwind.config.js`, and `@tailwind base;` in a **Tailwind CSS v4** project (which uses `@import "tailwindcss";` and `@tailwindcss/vite` or `@tailwindcss/postcss`).
 - **ESLint v9 vs. v8**: Generating legacy `.eslintrc.json` or `.eslintignore` files in an **ESLint v9** project that requires `eslint.config.mjs` (Flat Config).
 - **Next.js 15 & React 19**: Using synchronous `cookies()`, `headers()`, or `params` in **Next.js 15** (where Dynamic Request APIs are asynchronous `Promise`s), or proposing incompatible React 18 / Node.js combinations.
-- **Package Manager Mismatch**: Suggesting `npm install` in a repository locked with `pnpm-lock.yaml`, `bun.lock`, or `yarn.lock`.
+- **FastAPI & Pydantic v2**: Suggesting deprecated `@app.on_event("startup")` instead of `lifespan` context manager, or Pydantic v1 `class Config:` / `@validator` instead of `ConfigDict` and `@field_validator`/`@model_validator`.
+- **Package Manager Mismatch**: Suggesting `npm install` in a repository locked with `pnpm-lock.yaml`, `bun.lock`, `yarn.lock`, or proposing `pip install` in an active `uv` or `poetry` workspace.
 
 ### How `version-compat-mcp` Differs from General Documentation MCPs (e.g., Context7)
 
 | Dimension | Generic Documentation MCPs | `version-compat-mcp` |
 | :--- | :--- | :--- |
 | **Primary Goal** | Retrieve general API docs & tutorials | **Ground setup, compatibility & major version migrations in actual project state** |
-| **Project Awareness** | Unaware of local lockfiles, `.nvmrc`, or config style | Parses `package.json`, lockfiles, `.nvmrc`, `eslint.config.*`, `tsconfig.json` locally |
-| **Compatibility Logic** | Probabilistic text search | **Deterministic `semver` verification** against npm registry (`engines`, `peerDependencies`, `deprecated`) |
+| **Project Awareness** | Unaware of local lockfiles, `.nvmrc`, or config style | Parses `package.json`, lockfiles (`pnpm`, `bun`, `uv.lock`, `poetry.lock`), `.nvmrc`, `.python-version`, `tsconfig.json`, `pyproject.toml` |
+| **Compatibility Logic** | Probabilistic text search | **Deterministic `semver` & PEP 440 verification** against npm registry & PyPI (`engines`, `requires_python`, `peerDependencies`, `deprecated`) |
 | **Corpus Scope** | Broad tutorials & full API reference | Strictly **tag-pinned migration guides, breaking changes, and deprecations** |
 | **Failure Mode** | Silently defaults to `"latest"` or hallucinates | Explicit guardrails (`ambiguous_version`, `NO_EVIDENCE_DO_NOT_ASSUME_REMOVED`) |
 
@@ -88,6 +89,7 @@ flowchart LR
 
 ## 3. Supported Libraries & Versions
 
+### JavaScript / TypeScript Ecosystem
 | Library | Canonical ID | Indexed Major Versions | Key Migration & Setup Coverage |
 | :--- | :--- | :--- | :--- |
 | **Next.js** | `nextjs` | `v13`, `v14`, `v15` | Async `cookies()`/`headers()`/`params`, `fetch` caching defaults, React 19 peer deps, `@next/codemod` |
@@ -98,7 +100,19 @@ flowchart LR
 | **TypeScript** | `typescript` | `v5` | `moduleResolution: "bundler"`, `verbatimModuleSyntax` (`importsNotUsedAsValues` deprecation) |
 | **Node.js** | `node` | `v18`, `v20`, `v22` | `engines.node` compatibility, `require(esm)` stabilization, built-in `node:sqlite` |
 
-**Supported Package Managers**: `npm`, `pnpm` (v6–v9 + `pnpm-workspace.yaml` catalogs), `yarn` (Classic v1 & Berry v2+), `bun` (`bun.lock` & `bun.lockb`).
+**Supported JS/TS Package Managers**: `npm`, `pnpm` (v6–v9 + `pnpm-workspace.yaml` catalogs), `yarn` (Classic v1 & Berry v2+), `bun` (`bun.lock` & `bun.lockb`).
+
+### Python Ecosystem
+| Library / Tool | Canonical ID | Indexed Major Versions | Key Migration & Setup Coverage |
+| :--- | :--- | :--- | :--- |
+| **Python** | `python` | `3.10`, `3.11`, `3.12`, `3.13` | GIL-free free-threaded build, per-interpreter GIL, pattern matching, exception groups, `requires_python` |
+| **FastAPI** | `fastapi` | `0.100`, `0.115` | `lifespan` context manager vs `@app.on_event` deprecation, Pydantic v2 integration, Annotated dependencies |
+| **Pydantic** | `pydantic` | `v1`, `v2` | `ConfigDict` vs `class Config`, `@field_validator`/`@model_validator`, `model_dump()` vs `dict()`, Rust core speedups |
+| **SQLAlchemy** | `sqlalchemy` | `1.4`, `2.0` | 2.0 `select()` syntax, `session.scalars()`, `DeclarativeBase` subclassing, removal of legacy `session.query()` |
+| **LangChain** | `langchain` | `0.1`, `0.2`, `0.3` | Modular packages (`langchain-core`, `langchain-community`, partner packages), LCEL pipelines, Pydantic v2 core |
+| **uv** | `uv` | `0.4`, `0.5` | Cargo-style virtualenvs, workspace management, `uv pip`, `uv run` script metadata, fast lockfiles |
+
+**Supported Python Package Managers**: `uv` (`uv.lock`, `pyproject.toml`), `poetry` (`poetry.lock`, `pyproject.toml`), `pip` (`requirements.txt`, `Pipfile`).
 
 ---
 
@@ -172,9 +186,9 @@ npx -y smithery@latest mcp add eunryong/version-compat-mcp --client claude
 
 | Tool Name | Data Source | Description |
 | :--- | :--- | :--- |
-| **`detect_project_environment`** | Local file parser (Offline) | Detects Node.js version (`.nvmrc`, `.node-version`, `volta`, `engines`), package manager (`packageManager` > lockfile), locked versions (`node_modules` > lockfile > `package.json`), and config paradigms (`flat_config`, `v4_css_first`, `app_router`). |
-| **`check_dependency_compatibility`** | npm Registry API + `semver` | Verifies `engines.node`, `peerDependencies`, and `deprecated` status deterministically with ETag caching. Reports `conflict`, `warning`, or `unverified` (`workspace:*`). |
-| **`get_versioned_setup_guide`** | SQLite FTS5 + PM Translator | Returns version-pinned install commands formatted for the project's package manager (`pnpm add -D`, `bun add`, etc.), config templates, and obsolete patterns to avoid. |
+| **`detect_project_environment`** | Local file parser (Offline) | Detects Node.js & Python runtimes (`.nvmrc`, `.python-version`, `engines`, `Pipfile`), package manager (`npm`/`pnpm`/`yarn`/`bun`/`uv`/`poetry`/`pip`), locked versions (`node_modules`, `pnpm-lock.yaml`, `bun.lock`, `uv.lock`, `poetry.lock`, `requirements.txt`), and config paradigms (`flat_config`, `v4_css_first`, `app_router`, `pep621`). |
+| **`check_dependency_compatibility`** | npm / PyPI Registry API + Semver/PEP440 | Verifies `engines.node` / `requires_python`, `peerDependencies`, and `deprecated` status deterministically with ETag caching. Reports `conflict`, `warning`, `yanked`, or `unverified`. |
+| **`get_versioned_setup_guide`** | SQLite FTS5 + PM Translator | Returns version-pinned install commands formatted for the project's package manager (`pnpm add -D`, `uv add`, `poetry add`, etc.), config templates, and obsolete patterns to avoid. |
 | **`get_upgrade_steps`** | SQLite FTS5 (Tag-Pinned) | Retrieves ordered migration steps, breaking changes, and official codemod commands between `from_version` and `to_version` with GitHub tag `source_url` citations. |
 | **`search_versioned_docs`** | SQLite FTS5 BM25 | Searches tag-pinned migration guides, release notes, and deprecations for a specific library version (auto-resolving version from `project_path` if omitted). |
 

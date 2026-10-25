@@ -1,0 +1,54 @@
+collection: python
+repository_base: https://github.com/Eunryong/Version-Aware-Setup
+libraries:
+  python:
+    repo: python/cpython
+    tag_pattern: "^v3\\.(10|11|12|13)\\.\\d+$"
+    include_github_releases: true
+    paths:
+      - path_glob: "Doc/whatsnew/3.*.rst"
+        doc_type: release_note
+
+  pydantic:
+    repo: pydantic/pydantic
+    tag_pattern: "^v(1|2)\\.\\d+\\.\\d+$"
+    include_github_releases: true
+    paths:
+      - path_glob: "docs/migration.md"
+        doc_type: migration_guide
+      - path_glob: "docs/index.md"
+        doc_type: setup_guide
+
+  fastapi:
+    repo: fastapi/fastapi
+    tag_pattern: "^0\\.\\d+\\.\\d+$"
+    include_github_releases: true
+    paths:
+      - path_glob: "docs/en/docs/tutorial/index.md"
+        doc_type: setup_guide
+      - path_glob: "docs/en/docs/advanced/events.md"
+        doc_type: migration_guide
+
+  sqlalchemy:
+    repo: sqlalchemy/sqlalchemy
+    tag_pattern: "^rel_(1|2)_\\d+"
+    include_github_releases: true
+    paths:
+      - path_glob: "doc/build/changelog/migration_20.rst"
+        doc_type: migration_guide
+
+  langchain:
+    repo: langchain-ai/langchain
+    tag_pattern: "^v?0\\.(1|2|3)\\.\\d+$"
+    include_github_releases: true
+    paths:
+      - path_glob: "docs/docs/how_to/migrate_chains.mdx"
+        doc_type: migration_guide
+
+  uv:
+    repo: astral-sh/uv
+    tag_pattern: "^0\\.\\d+\\.\\d+$"
+    include_github_releases: true
+    paths:
+      - path_glob: "docs/getting-started/installation.md"
+        doc_type: setup_guide

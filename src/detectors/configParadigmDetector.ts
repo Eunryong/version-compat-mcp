@@ -182,6 +182,59 @@ export function detectConfigParadigms(
   const viteConfigFile =
     VITE_CONFIGS.find((f) => fs.existsSync(path.join(projectPath, f))) ?? null;
 
+  // 6. Python packaging detection
+  const pyConfigFiles: string[] = [];
+  let pyPackagingStandard: "pep621" | "poetry" | "flit" | "pipenv" | "requirements" | "none" = "none";
+  let pyBuildBackend: string | null = null;
+  let pyUvEnabled = false;
+
+  const pyprojectCandidate = path.join(projectPath, "pyproject.toml");
+  if (fs.existsSync(pyprojectCandidate)) {
+    pyConfigFiles.push("pyproject.toml");
+    try {
+      const content = fs.readFileSync(pyprojectCandidate, "utf8");
+      const backendMatch = content.match(/build-backend\s*=\s*["']([^"']+)["']/);
+      if (backendMatch) {
+        pyBuildBackend = backendMatch[1].trim();
+      }
+      if (content.includes("[tool.poetry]")) {
+        pyPackagingStandard = "poetry";
+      } else if (content.includes("[tool.flit]")) {
+        pyPackagingStandard = "flit";
+      } else if (content.includes("[project]")) {
+        pyPackagingStandard = "pep621";
+      }
+      if (content.includes("[tool.uv]")) {
+        pyUvEnabled = true;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (fs.existsSync(path.join(projectPath, "uv.lock"))) {
+    pyConfigFiles.push("uv.lock");
+    pyUvEnabled = true;
+  }
+  if (fs.existsSync(path.join(projectPath, "poetry.lock"))) {
+    pyConfigFiles.push("poetry.lock");
+    if (pyPackagingStandard === "none") pyPackagingStandard = "poetry";
+  }
+  if (fs.existsSync(path.join(projectPath, "Pipfile"))) {
+    pyConfigFiles.push("Pipfile");
+    if (pyPackagingStandard === "none") pyPackagingStandard = "pipenv";
+  }
+  if (fs.existsSync(path.join(projectPath, "requirements.txt"))) {
+    pyConfigFiles.push("requirements.txt");
+    if (pyPackagingStandard === "none") pyPackagingStandard = "requirements";
+  }
+  if (fs.existsSync(path.join(projectPath, "setup.py"))) {
+    pyConfigFiles.push("setup.py");
+  }
+  if (fs.existsSync(path.join(projectPath, "setup.cfg"))) {
+    pyConfigFiles.push("setup.cfg");
+  }
+
   return {
     eslint: {
       mode: eslintMode,
@@ -209,5 +262,15 @@ export function detectConfigParadigms(
     vite: {
       config_file: viteConfigFile,
     },
+    ...(pyConfigFiles.length > 0
+      ? {
+          python: {
+            packaging_standard: pyPackagingStandard,
+            config_files: pyConfigFiles,
+            build_backend: pyBuildBackend,
+            uv_enabled: pyUvEnabled,
+          },
+        }
+      : {}),
   };
 }

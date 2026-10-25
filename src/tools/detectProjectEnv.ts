@@ -43,8 +43,6 @@ export function handleDetectProjectEnvironment(input: {
         `Failed to parse package.json at ${pkgJsonPath}: ${err instanceof Error ? err.message : String(err)}`
       );
     }
-  } else {
-    warnings.push(`No package.json found at ${resolvedPath}`);
   }
 
   const runtime = detectRuntimeEnvironment(resolvedPath, pkgJson);
@@ -59,6 +57,11 @@ export function handleDetectProjectEnvironment(input: {
     pkgJson,
     coreDependencies
   );
+
+  const isPythonProject = Boolean(configParadigms.python);
+  if (!pkgJson && !isPythonProject) {
+    warnings.push(`No package.json found at ${resolvedPath}`);
+  }
 
   if (configParadigms.eslint.legacy_files_present.length > 0) {
     warnings.push(
@@ -75,7 +78,7 @@ export function handleDetectProjectEnvironment(input: {
     (d) => d.resolution_source === "ambiguous_range"
   );
   let status: ResponseStatus = "ok";
-  if (!pkgJson) {
+  if (!pkgJson && !isPythonProject) {
     status = "unverified";
   } else if (hasAmbiguousDep) {
     status = "partial";

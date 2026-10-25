@@ -203,6 +203,162 @@ export const INDEXED_VERSIONS_SEED: IndexedVersionSeed[] = [
     release_date: "2024-10-29",
     required_node: ">=22.0.0",
   },
+  // Python
+  {
+    library: "python",
+    version: "3.10.14",
+    major: 3,
+    minor: 10,
+    patch: 14,
+    git_tag: "v3.10.14",
+    release_date: "2024-03-19",
+    required_node: null,
+  },
+  {
+    library: "python",
+    version: "3.11.9",
+    major: 3,
+    minor: 11,
+    patch: 9,
+    git_tag: "v3.11.9",
+    release_date: "2024-04-02",
+    required_node: null,
+  },
+  {
+    library: "python",
+    version: "3.12.7",
+    major: 3,
+    minor: 12,
+    patch: 7,
+    git_tag: "v3.12.7",
+    release_date: "2024-10-01",
+    required_node: null,
+  },
+  {
+    library: "python",
+    version: "3.13.0",
+    major: 3,
+    minor: 13,
+    patch: 0,
+    git_tag: "v3.13.0",
+    release_date: "2024-10-07",
+    required_node: null,
+  },
+  // Pydantic
+  {
+    library: "pydantic",
+    version: "1.10.18",
+    major: 1,
+    minor: 10,
+    patch: 18,
+    git_tag: "v1.10.18",
+    release_date: "2024-09-04",
+    required_node: null,
+  },
+  {
+    library: "pydantic",
+    version: "2.10.6",
+    major: 2,
+    minor: 10,
+    patch: 6,
+    git_tag: "v2.10.6",
+    release_date: "2025-01-23",
+    required_node: null,
+  },
+  // FastAPI
+  {
+    library: "fastapi",
+    version: "0.100.0",
+    major: 0,
+    minor: 100,
+    patch: 0,
+    git_tag: "0.100.0",
+    release_date: "2023-07-11",
+    required_node: null,
+  },
+  {
+    library: "fastapi",
+    version: "0.115.6",
+    major: 0,
+    minor: 115,
+    patch: 6,
+    git_tag: "0.115.6",
+    release_date: "2024-12-09",
+    required_node: null,
+  },
+  // SQLAlchemy
+  {
+    library: "sqlalchemy",
+    version: "1.4.53",
+    major: 1,
+    minor: 4,
+    patch: 53,
+    git_tag: "rel_1_4_53",
+    release_date: "2024-06-19",
+    required_node: null,
+  },
+  {
+    library: "sqlalchemy",
+    version: "2.0.36",
+    major: 2,
+    minor: 0,
+    patch: 36,
+    git_tag: "rel_2_0_36",
+    release_date: "2024-10-18",
+    required_node: null,
+  },
+  // LangChain
+  {
+    library: "langchain",
+    version: "0.1.20",
+    major: 0,
+    minor: 1,
+    patch: 20,
+    git_tag: "v0.1.20",
+    release_date: "2024-05-10",
+    required_node: null,
+  },
+  {
+    library: "langchain",
+    version: "0.2.16",
+    major: 0,
+    minor: 2,
+    patch: 16,
+    git_tag: "v0.2.16",
+    release_date: "2024-08-30",
+    required_node: null,
+  },
+  {
+    library: "langchain",
+    version: "0.3.7",
+    major: 0,
+    minor: 3,
+    patch: 7,
+    git_tag: "v0.3.7",
+    release_date: "2024-11-06",
+    required_node: null,
+  },
+  // uv
+  {
+    library: "uv",
+    version: "0.4.30",
+    major: 0,
+    minor: 4,
+    patch: 30,
+    git_tag: "0.4.30",
+    release_date: "2024-10-31",
+    required_node: null,
+  },
+  {
+    library: "uv",
+    version: "0.5.2",
+    major: 0,
+    minor: 5,
+    patch: 2,
+    git_tag: "0.5.2",
+    release_date: "2024-11-20",
+    required_node: null,
+  },
 ];
 
 export const SETUP_TEMPLATES_SEED: SetupTemplateSeed[] = [
@@ -585,6 +741,215 @@ export const SETUP_TEMPLATES_SEED: SetupTemplateSeed[] = [
     source_url:
       "https://github.com/nodejs/node/blob/v22.11.0/doc/api/deprecations.md",
     git_tag: "v22.11.0",
+  },
+  // Python 3.12
+  {
+    library: "python",
+    major_version: 3,
+    version: "3.12.7",
+    framework_context: "standalone",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Set local Python version using .python-version",
+        npm_command: "python3 -V",
+        source_url:
+          "https://github.com/python/cpython/blob/v3.12.7/Doc/whatsnew/3.12.rst",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: ".python-version",
+        description: "Pin Python runtime version",
+        content: `3.12.7\n`,
+        source_url:
+          "https://github.com/python/cpython/blob/v3.12.7/Doc/whatsnew/3.12.rst",
+      },
+      {
+        file_path: "pyproject.toml",
+        description: "Modern PEP 621 packaging metadata",
+        content: `[project]\nname = "my-python-app"\nversion = "0.1.0"\nrequires-python = ">=3.12"\ndependencies = []\n`,
+        source_url:
+          "https://github.com/python/cpython/blob/v3.12.7/Doc/whatsnew/3.12.rst",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT use setup.py with direct 'python setup.py install' (deprecated; use pyproject.toml with build backend).",
+      "Do NOT use removed standard library modules (e.g. cgi, telnetlib, pipes, chunk, imghdr, sndhdr, crypt in Python 3.13).",
+    ],
+    source_url:
+      "https://github.com/python/cpython/blob/v3.12.7/Doc/whatsnew/3.12.rst",
+    git_tag: "v3.12.7",
+  },
+  // Pydantic v2
+  {
+    library: "pydantic",
+    major_version: 2,
+    version: "2.10.6",
+    framework_context: "standalone",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Install Pydantic v2 and optional settings package",
+        npm_command: "pip install \"pydantic>=2.10.0\" pydantic-settings",
+        source_url:
+          "https://github.com/pydantic/pydantic/blob/v2.10.6/docs/migration.md",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: "models.py",
+        description: "Pydantic v2 modern model with model_dump and field_validator",
+        content: `from pydantic import BaseModel, Field, field_validator\n\nclass UserModel(BaseModel):\n    id: int\n    name: str = Field(..., min_length=1)\n\n    @field_validator("name")\n    @classmethod\n    def validate_name(cls, v: str) -> str:\n        return v.strip().title()\n\n# Usage:\n# user = UserModel.model_validate({"id": 1, "name": "alice"})\n# data = user.model_dump()\n`,
+        source_url:
+          "https://github.com/pydantic/pydantic/blob/v2.10.6/docs/migration.md",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT use '.dict()' in Pydantic v2 (deprecated; replace with '.model_dump()').",
+      "Do NOT use '.json()' in Pydantic v2 (deprecated; replace with '.model_dump_json()').",
+      "Do NOT use '@validator' in Pydantic v2 (deprecated; replace with '@field_validator').",
+      "Do NOT use '@root_validator' in Pydantic v2 (deprecated; replace with '@model_validator').",
+      "Do NOT import 'BaseSettings' from 'pydantic' directly (moved to 'pydantic-settings' package).",
+      "Do NOT use 'parse_obj()' in Pydantic v2 (deprecated; replace with 'model_validate()').",
+    ],
+    source_url:
+      "https://github.com/pydantic/pydantic/blob/v2.10.6/docs/migration.md",
+    git_tag: "v2.10.6",
+  },
+  // FastAPI Lifespan
+  {
+    library: "fastapi",
+    major_version: 0,
+    version: "0.115.6",
+    framework_context: "fastapi",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Install FastAPI and Uvicorn",
+        npm_command: "pip install \"fastapi>=0.115.0\" \"uvicorn[standard]\"",
+        source_url:
+          "https://github.com/fastapi/fastapi/blob/0.115.6/docs/en/docs/advanced/events.md",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: "main.py",
+        description: "FastAPI modern lifespan context manager",
+        content: `from contextlib import asynccontextmanager\nfrom fastapi import FastAPI\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # Startup logic: initialize database connection pool, cache\n    print("Starting up application...")\n    yield\n    # Shutdown logic: close database connections, cleanup resources\n    print("Shutting down application...")\n\napp = FastAPI(lifespan=lifespan)\n\n@app.get("/")\nasync def root():\n    return {"message": "Hello World"}\n`,
+        source_url:
+          "https://github.com/fastapi/fastapi/blob/0.115.6/docs/en/docs/advanced/events.md",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT use '@app.on_event(\"startup\")' or '@app.on_event(\"shutdown\")' (deprecated; use lifespan async context manager).",
+    ],
+    source_url:
+      "https://github.com/fastapi/fastapi/blob/0.115.6/docs/en/docs/advanced/events.md",
+    git_tag: "0.115.6",
+  },
+  // SQLAlchemy 2.0
+  {
+    library: "sqlalchemy",
+    major_version: 2,
+    version: "2.0.36",
+    framework_context: "standalone",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Install SQLAlchemy 2.0",
+        npm_command: "pip install \"sqlalchemy>=2.0.0\"",
+        source_url:
+          "https://github.com/sqlalchemy/sqlalchemy/blob/rel_2_0_36/doc/build/changelog/migration_20.rst",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: "database.py",
+        description: "SQLAlchemy 2.0 2.0-style DeclarativeBase, Mapped annotations, and select() queries",
+        content: `from sqlalchemy import create_engine, select, String\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session\n\nclass Base(DeclarativeBase):\n    pass\n\nclass User(Base):\n    __tablename__ = "users"\n    id: Mapped[int] = mapped_column(primary_key=True)\n    name: Mapped[str] = mapped_column(String(50))\n\nengine = create_engine("sqlite:///app.db")\nBase.metadata.create_all(engine)\n\nwith Session(engine) as session:\n    # 2.0 style query:\n    stmt = select(User).where(User.name == "alice")\n    user = session.scalars(stmt).first()\n`,
+        source_url:
+          "https://github.com/sqlalchemy/sqlalchemy/blob/rel_2_0_36/doc/build/changelog/migration_20.rst",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT use legacy 'session.query(Model)' in SQLAlchemy 2.0 (deprecated/legacy; use 'session.scalars(select(Model))' or 'session.execute(select(Model))').",
+      "Do NOT use 'declarative_base()' function for modern models (use subclass of 'DeclarativeBase').",
+      "Do NOT use untyped 'Column()' in Declarative models (use 'Mapped[T]' with 'mapped_column()').",
+    ],
+    source_url:
+      "https://github.com/sqlalchemy/sqlalchemy/blob/rel_2_0_36/doc/build/changelog/migration_20.rst",
+    git_tag: "rel_2_0_36",
+  },
+  // LangChain 0.3
+  {
+    library: "langchain",
+    major_version: 0,
+    version: "0.3.7",
+    framework_context: "standalone",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Install LangChain and langchain-core",
+        npm_command: "pip install langchain langchain-core",
+        source_url:
+          "https://github.com/langchain-ai/langchain/blob/v0.3.7/docs/docs/how_to/migrate_chains.mdx",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: "agent.py",
+        description: "Modern LangChain LCEL chain with pipe operator",
+        content: `from langchain_core.prompts import ChatPromptTemplate\nfrom langchain_core.output_parsers import StrOutputParser\n\n# Modern LangChain 0.3 LCEL pipeline (prompt | model | parser)\nprompt = ChatPromptTemplate.from_template("Translate to Korean: {input}")\n# chain = prompt | model | StrOutputParser()\n# result = await chain.ainvoke({"input": "Hello world"})\n`,
+        source_url:
+          "https://github.com/langchain-ai/langchain/blob/v0.3.7/docs/docs/how_to/migrate_chains.mdx",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT use legacy 'LLMChain' or 'initialize_agent' in LangChain 0.2/0.3 (deprecated; migrate to LangChain Expression Language (LCEL) or LangGraph).",
+      "Do NOT import core classes from root 'langchain' package when available in 'langchain-core' (use 'langchain_core.prompts', 'langchain_core.messages').",
+    ],
+    source_url:
+      "https://github.com/langchain-ai/langchain/blob/v0.3.7/docs/docs/how_to/migrate_chains.mdx",
+    git_tag: "v0.3.7",
+  },
+  // uv
+  {
+    library: "uv",
+    major_version: 0,
+    version: "0.5.2",
+    framework_context: "standalone",
+    required_node: null,
+    install_commands: [
+      {
+        step: 1,
+        description: "Install or update uv CLI",
+        npm_command: "pip install uv",
+        source_url:
+          "https://github.com/astral-sh/uv/blob/0.5.2/docs/getting-started/installation.md",
+      },
+    ],
+    config_examples: [
+      {
+        file_path: "pyproject.toml",
+        description: "uv-managed PEP 621 project configuration",
+        content: `[project]\nname = "fastapi-uv-app"\nversion = "0.1.0"\nrequires-python = ">=3.12"\ndependencies = [\n    "fastapi>=0.115.0",\n    "uvicorn[standard]>=0.32.0",\n    "pydantic>=2.10.0",\n]\n\n[build-system]\nrequires = ["hatchling"]\nbuild-backend = "hatchling.build"\n`,
+        source_url:
+          "https://github.com/astral-sh/uv/blob/0.5.2/docs/getting-started/installation.md",
+      },
+    ],
+    obsolete_patterns: [
+      "Do NOT run 'pip install -r requirements.txt' in uv-managed projects (use 'uv add <pkg>' or 'uv sync').",
+      "Do NOT run 'pip freeze > requirements.txt' (uv uses deterministic 'uv.lock').",
+    ],
+    source_url:
+      "https://github.com/astral-sh/uv/blob/0.5.2/docs/getting-started/installation.md",
+    git_tag: "0.5.2",
   },
 ];
 
@@ -1007,6 +1372,243 @@ In TypeScript 5.0+, the following \`tsconfig.json\` options are deprecated and w
 - **DEP0040 (\`punycode\`)**: The built-in \`punycode\` module is runtime-deprecated in Node 21/22+. Import the userland \`punycode/\` npm package instead.
 - **DEP0169 (\`url.parse\`)**: \`url.parse()\` is deprecated due to non-standard host parsing behavior. Use the WHATWG \`new URL(input)\` API instead.
 - **DEP0147 (\`fs.rmdir(path, { recursive: true })\`)**: Deprecated and throws in strict modes. Use \`fs.rm(path, { recursive: true, force: true })\` instead.
+`,
+  },
+
+  // ============================================================================
+  // 11. Python 3.12 & 3.13 Runtime Changes, PEP 695, and Removed Standard Modules
+  // ============================================================================
+  {
+    library: "python",
+    version: "3.13.0",
+    major_version: 3,
+    doc_type: "deprecation",
+    git_tag: "v3.13.0",
+    base_source_url:
+      "https://github.com/python/cpython/blob/v3.13.0/Doc/whatsnew/3.13.rst",
+    collected_at: "2026-10-25",
+    markdown: `# Python 3.12 & 3.13 Release Notes and Breaking Changes
+
+## PEP 594: Removal of Dead Batteries in Python 3.13 (Breaking Change)
+In Python 3.13, 19 obsolete standard library modules have been permanently removed:
+- Removed: \`cgi\`, \`cgitb\`, \`telnetlib\`, \`pipes\`, \`chunk\`, \`imghdr\`, \`sndhdr\`, \`crypt\`, \`aifc\`, \`audioop\`, \`mailcap\`, \`nis\`, \`nntplib\`, \`spwd\`, \`sunau\`, \`uu\`, \`xdrlib\`.
+- Also removed: \`lib2to3\`, \`asyncore\`, \`asynchat\`.
+- Replacement recommendations:
+  - For \`cgi.parse_header\`: use \`email.message.EmailMessage\` or external libraries like \`multipart\` / \`starlette\`.
+  - For \`telnetlib\`: use \`telnetlib3\` or \`asyncssh\`.
+  - For \`crypt\`: use \`bcrypt\` or \`passlib\`.
+
+## Experimental Free-Threaded CPython (PEP 703) and JIT Compiler in 3.13
+- **Free-Threaded CPython**: Experimental build option (\`--disable-gil\`) allowing threads to execute Python bytecode concurrently without the Global Interpreter Lock (GIL).
+- **Copy-on-write JIT Compiler**: Preliminary JIT compiler enabled via \`--enable-experimental-jit\`.
+
+## PEP 695: Type Parameter Syntax in Python 3.12+
+Python 3.12 introduced clean syntax for generic classes and functions:
+\`\`\`python
+# Python 3.12+ type parameter syntax:
+type Point[T] = tuple[T, T]
+
+def max_key[K, V](mapping: dict[K, V]) -> K:
+    return max(mapping.keys())
+\`\`\`
+`,
+  },
+
+  // ============================================================================
+  // 12. Pydantic v1 to v2 Migration Guide
+  // ============================================================================
+  {
+    library: "pydantic",
+    version: "2.10.6",
+    major_version: 2,
+    doc_type: "migration_guide",
+    git_tag: "v2.10.6",
+    base_source_url:
+      "https://github.com/pydantic/pydantic/blob/v2.10.6/docs/migration.md",
+    collected_at: "2026-10-25",
+    markdown: `# Pydantic v1 to v2 Migration Guide
+
+## Method Renames: model_dump, model_dump_json, and model_validate (Breaking Change)
+Pydantic v2 moved validation logic to Rust (pydantic-core) with cleaner method naming:
+- **\`.dict()\` -> \`.model_dump()\`**: \`user.dict()\` is deprecated. Replace with \`user.model_dump()\`.
+- **\`.json()\` -> \`.model_dump_json()\`**: \`user.json()\` is deprecated. Replace with \`user.model_dump_json()\`.
+- **\`parse_obj()\` -> \`model_validate()\`**: \`User.parse_obj(data)\` is deprecated. Replace with \`User.model_validate(data)\`.
+- **\`parse_raw()\` -> \`model_validate_json()\`**: \`User.parse_raw(json_str)\` is deprecated. Replace with \`User.model_validate_json(json_str)\`.
+- **\`from_orm()\` -> \`model_validate(obj, from_attributes=True)\`**: \`User.from_orm(db_obj)\` is deprecated.
+
+## Validator Changes: @field_validator and @model_validator (Breaking Change)
+- **\`@validator\` -> \`@field_validator\`**:
+\`\`\`python
+# Pydantic v2 modern validator:
+from pydantic import BaseModel, field_validator
+
+class User(BaseModel):
+    name: str
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Name cannot be empty")
+        return v.strip().title()
+\`\`\`
+- **\`@root_validator\` -> \`@model_validator\`**: Use \`@model_validator(mode="before")\` or \`@model_validator(mode="after")\`.
+
+## BaseSettings Separated into pydantic-settings
+\`BaseSettings\` is no longer included in the core \`pydantic\` package.
+Install \`pydantic-settings\` and import from it:
+\`\`\`python
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    database_url: str
+\`\`\`
+`,
+  },
+
+  // ============================================================================
+  // 13. FastAPI Lifespan Events Migration Guide
+  // ============================================================================
+  {
+    library: "fastapi",
+    version: "0.115.6",
+    major_version: 0,
+    doc_type: "migration_guide",
+    git_tag: "0.115.6",
+    base_source_url:
+      "https://github.com/fastapi/fastapi/blob/0.115.6/docs/en/docs/advanced/events.md",
+    collected_at: "2026-10-25",
+    markdown: `# FastAPI Lifespan Events Migration Guide
+
+## Deprecation of @app.on_event("startup") and @app.on_event("shutdown") (Deprecation)
+FastAPI and Starlette have officially deprecated \`@app.on_event("startup")\` and \`@app.on_event("shutdown")\`.
+Use the modern \`lifespan\` async context manager instead:
+
+\`\`\`python
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Code executed before the application starts taking requests:
+    print("Application starting up: initializing DB pool...")
+    yield
+    # Code executed after the application finishes handling requests:
+    print("Application shutting down: closing DB connections...")
+
+app = FastAPI(lifespan=lifespan)
+\`\`\`
+
+## Lifespan State Sharing
+Values yielded or stored on \`app.state\` during lifespan are available across route requests.
+`,
+  },
+
+  // ============================================================================
+  // 14. SQLAlchemy 1.4 to 2.0 Migration Guide
+  // ============================================================================
+  {
+    library: "sqlalchemy",
+    version: "2.0.36",
+    major_version: 2,
+    doc_type: "migration_guide",
+    git_tag: "rel_2_0_36",
+    base_source_url:
+      "https://github.com/sqlalchemy/sqlalchemy/blob/rel_2_0_36/doc/build/changelog/migration_20.rst",
+    collected_at: "2026-10-25",
+    markdown: `# SQLAlchemy 1.4 to 2.0 Migration Guide
+
+## Legacy Query API Removed: session.query(Model) -> session.scalars(select(Model)) (Breaking Change)
+SQLAlchemy 2.0 removes the legacy \`Query\` object interface in favor of unified 2.0-style \`select()\`:
+\`\`\`python
+# 1.x legacy (removed in 2.0):
+# users = session.query(User).filter_by(name="alice").all()
+
+# 2.0 unified execution:
+from sqlalchemy import select
+stmt = select(User).where(User.name == "alice")
+users = session.scalars(stmt).all()
+\`\`\`
+
+## DeclarativeBase and Mapped[] Annotations
+SQLAlchemy 2.0 introduces fully type-annotated Declarative mappings:
+\`\`\`python
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import String
+
+class Base(DeclarativeBase):
+    pass
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(50), unique=True)
+    bio: Mapped[str | None] = mapped_column(String(200), default=None)
+\`\`\`
+`,
+  },
+
+  // ============================================================================
+  // 15. LangChain 0.2 to 0.3 Migration Guide
+  // ============================================================================
+  {
+    library: "langchain",
+    version: "0.3.7",
+    major_version: 0,
+    doc_type: "migration_guide",
+    git_tag: "v0.3.7",
+    base_source_url:
+      "https://github.com/langchain-ai/langchain/blob/v0.3.7/docs/docs/how_to/migrate_chains.mdx",
+    collected_at: "2026-10-25",
+    markdown: `# LangChain 0.2 & 0.3 Migration Guide
+
+## Legacy Chains Deprecation: LLMChain -> LCEL Pipeline (Breaking Change)
+LangChain 0.2 and 0.3 officially deprecated legacy classes such as \`LLMChain\`, \`ConversationChain\`, and \`initialize_agent\`.
+Replace them with LangChain Expression Language (LCEL) using the \`|\` pipe operator:
+\`\`\`python
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# Modern LCEL composition:
+prompt = ChatPromptTemplate.from_template("Translate to Korean: {text}")
+chain = prompt | model | StrOutputParser()
+
+# Invoke:
+result = await chain.ainvoke({"text": "Hello world"})
+\`\`\`
+
+## Package Decoupling: langchain-core and Provider Packages
+Core interfaces (\`BaseChatModel\`, \`PromptTemplate\`, \`Runnable\`) reside in \`langchain-core\`.
+Model providers are installed independently:
+- \`langchain-openai\`
+- \`langchain-anthropic\`
+- \`langchain-community\`
+`,
+  },
+
+  // ============================================================================
+  // 16. uv Package Management & Modern Python Tooling
+  // ============================================================================
+  {
+    library: "uv",
+    version: "0.5.2",
+    major_version: 0,
+    doc_type: "setup_guide",
+    git_tag: "0.5.2",
+    base_source_url:
+      "https://github.com/astral-sh/uv/blob/0.5.2/docs/getting-started/installation.md",
+    collected_at: "2026-10-25",
+    markdown: `# uv Modern Python Package Management & Tooling
+
+## Core Commands and Workflow
+uv is an extremely fast Python package manager and resolver written in Rust.
+- **Project Initialization**: \`uv init [project-name]\` (creates modern PEP 621 \`pyproject.toml\`).
+- **Add Dependencies**: \`uv add fastapi uvicorn\` (updates \`pyproject.toml\` and generates deterministic \`uv.lock\`).
+- **Add Dev Dependencies**: \`uv add --dev pytest ruff\`.
+- **Environment Synchronization**: \`uv sync\` (creates and updates \`.venv\` matching \`uv.lock\`).
+- **Run Commands in Virtualenv**: \`uv run pytest\` or \`uv run python main.py\`.
+- **Python Version Pinning**: \`uv python pin 3.12\` (writes to \`.python-version\`).
 `,
   },
 ];

@@ -6,7 +6,7 @@ export async function handleGetSetupGuideForMcp(args: {
   target_version: string;
   package_manager: SupportedPackageManager;
   runtime_version?: string;
-  framework_context?: "nextjs" | "vite" | "react" | "postcss" | "standalone";
+  framework_context?: string;
 }): Promise<Record<string, unknown>> {
   return handleGetVersionedSetupGuide(args);
 }

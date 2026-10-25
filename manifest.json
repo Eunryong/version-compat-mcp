@@ -2,9 +2,9 @@
   "manifest_version": "0.3",
   "name": "version-compat-mcp",
   "display_name": "Version Compat MCP",
-  "version": "0.1.1",
-  "description": "Version-Aware Setup, Dependency Compatibility & Migration MCP Server for the JS/TS Ecosystem.",
-  "long_description": "Your agent reads the wrong docs. version-compat makes it read the right version. Analyzes your project's actual Node.js runtime, package manager (npm/pnpm/yarn/bun), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
+  "version": "0.2.0",
+  "description": "Version-Aware Setup, Dependency Compatibility & Migration MCP Server for JS/TS & Python ecosystems.",
+  "long_description": "Your agent reads the wrong docs. version-compat makes it read the right version. Analyzes your project's actual Node.js & Python runtimes, package managers (npm/pnpm/yarn/bun/uv/poetry/pip), lockfile versions, and configuration files to supply deterministic compatibility checks and tag-pinned migration facts.",
   "author": {
     "name": "Eunryong",
     "url": "https://github.com/Eunryong"
@@ -26,7 +26,13 @@
     "tailwindcss",
     "eslint",
     "react",
-    "vite"
+    "vite",
+    "python",
+    "fastapi",
+    "pydantic",
+    "sqlalchemy",
+    "uv",
+    "poetry"
   ],
   "server": {
     "type": "node",
@@ -43,7 +49,7 @@
   "tools": [
     {
       "name": "detect_project_environment",
-      "description": "Detects Node.js runtime, package manager (npm/pnpm/yarn/bun), locked dependency versions, and config paradigms (ESLint flat config, Tailwind v4 CSS-first, Next.js App/Pages router, tsconfig) from local project files without network calls.",
+      "description": "Detects Node.js/Python runtime, package manager (npm/pnpm/yarn/bun/uv/poetry/pip), locked dependency versions, and config paradigms (ESLint flat config, Tailwind v4 CSS-first, Next.js App/Pages router, tsconfig, pyproject.toml PEP 621) from local project files without network calls.",
       "inputSchema": {
         "type": "object",
         "properties": {

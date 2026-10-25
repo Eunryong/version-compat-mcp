@@ -14,11 +14,11 @@ import { handleGetUpgradeSteps } from "./tools/getUpgradeSteps.js";
 import { handleSearchVersionedDocs } from "./tools/searchVersionedDocs.js";
 
 const SERVER_INSTRUCTIONS = `
-version-compat-mcp supplies deterministic, version-grounded setup, compatibility, and migration facts for JS/TS projects (Node.js, TypeScript, React, Next.js, Vite, Tailwind CSS, ESLint).
+version-compat-mcp supplies deterministic, version-grounded setup, compatibility, and migration facts for JS/TS (Node.js, TypeScript, React, Next.js, Vite, Tailwind CSS, ESLint) and Python (Python 3.10-3.13, Pydantic, FastAPI, SQLAlchemy, LangChain, uv, Poetry, pip) ecosystems.
 
 Mandatory workflow for host agents (Google Antigravity, OpenAI Codex, Claude Code, Cursor):
-1. Before suggesting package install commands, config files, or framework migrations, call 'detect_project_environment' on the workspace root to determine the exact package manager (npm/pnpm/yarn/bun), installed dependency versions, and config paradigms (e.g., ESLint Flat Config vs .eslintrc, Tailwind v4 CSS-first vs v3 tailwind.config.js).
-2. Before proposing dependency version changes or major upgrades, call 'check_dependency_compatibility' to verify engines.node, peerDependencies, and deprecations against the npm registry.
+1. Before suggesting package install commands, config files, or framework migrations, call 'detect_project_environment' on the workspace root to determine the exact package manager (npm/pnpm/yarn/bun/uv/poetry/pip), installed dependency versions, and config paradigms (e.g., ESLint Flat Config, Tailwind v4 CSS-first, pyproject.toml PEP 621).
+2. Before proposing dependency version changes or major upgrades, call 'check_dependency_compatibility' to verify engines.node / requires_python, peerDependencies, and deprecations against npm / PyPI.
 3. Use 'get_versioned_setup_guide', 'get_upgrade_steps', and 'search_versioned_docs' to retrieve tag-pinned official documentation chunks with source_url citations.
 4. Safety Guardrails:
    - Never silently assume 'latest' when a version is unknown or ambiguous.
@@ -30,7 +30,7 @@ export function createVersionCompatServer(): McpServer {
   const server = new McpServer(
     {
       name: "version-compat-mcp",
-      version: "0.1.1",
+      version: "0.2.0",
     },
     {
       instructions: SERVER_INSTRUCTIONS,
@@ -42,7 +42,7 @@ export function createVersionCompatServer(): McpServer {
 
   server.tool(
     "detect_project_environment",
-    "Detects Node.js runtime, package manager (npm/pnpm/yarn/bun), locked dependency versions, and config paradigms (ESLint flat config, Tailwind v4 CSS-first, Next.js App/Pages router, tsconfig) from local project files without network calls.",
+    "Detects Node.js & Python runtime, package manager (npm/pnpm/yarn/bun/uv/poetry/pip), locked dependency versions, and config paradigms (ESLint flat config, Tailwind v4 CSS-first, Next.js App/Pages router, tsconfig, pyproject.toml PEP 621) from local project files without network calls.",
     DetectProjectEnvironmentInputSchema.shape,
     async (args) => {
       const result = handleDetectProjectEnvironment(args);

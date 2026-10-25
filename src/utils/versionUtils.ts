@@ -19,6 +19,23 @@ const ALIAS_MAP: Record<string, SupportedLibrary> = {
   "@tailwindcss/postcss": "tailwindcss",
   eslint: "eslint",
   "@eslint/js": "eslint",
+  python: "python",
+  py: "python",
+  cpython: "python",
+  python3: "python",
+  pydantic: "pydantic",
+  "pydantic-settings": "pydantic",
+  "pydantic-core": "pydantic",
+  fastapi: "fastapi",
+  sqlalchemy: "sqlalchemy",
+  sqla: "sqlalchemy",
+  langchain: "langchain",
+  "langchain-core": "langchain",
+  langchain_core: "langchain",
+  "langchain-community": "langchain",
+  langchain_community: "langchain",
+  uv: "uv",
+  "astral-uv": "uv",
 };
 
 export function normalizeLibraryName(raw: string): SupportedLibrary | null {
@@ -106,8 +123,15 @@ export function analyzeVersionSpec(rawSpec: string): ParsedVersionSpec {
     };
   }
 
+  let normalized = raw;
+  if (normalized.startsWith("==")) {
+    normalized = normalized.slice(2).trim();
+  } else if (normalized.startsWith("~=")) {
+    normalized = `~${normalized.slice(2).trim()}`;
+  }
+
   // Strip leading 'v' if exact version like "v20.11.0"
-  const cleanExact = semver.clean(raw);
+  const cleanExact = semver.clean(normalized);
   if (cleanExact) {
     const parsed = semver.parse(cleanExact);
     if (parsed) {
@@ -121,7 +145,7 @@ export function analyzeVersionSpec(rawSpec: string): ParsedVersionSpec {
   }
 
   // Check if it is a valid semver range (e.g. "^15.0.0", "~4.0.0", "15.x", "15")
-  const validRange = semver.validRange(raw);
+  const validRange = semver.validRange(normalized);
   if (!validRange || validRange === "*") {
     return {
       status: "ambiguous",

@@ -6,6 +6,12 @@ export const SUPPORTED_LIBRARIES = [
   "vite",
   "tailwindcss",
   "eslint",
+  "python",
+  "pydantic",
+  "fastapi",
+  "sqlalchemy",
+  "langchain",
+  "uv",
 ] as const;
 
 export type SupportedLibrary = (typeof SUPPORTED_LIBRARIES)[number];
@@ -18,9 +24,23 @@ export const LIBRARY_NPM_PACKAGE_MAP: Record<SupportedLibrary, string[]> = {
   vite: ["vite"],
   tailwindcss: ["tailwindcss", "@tailwindcss/vite", "@tailwindcss/postcss"],
   eslint: ["eslint", "@eslint/js"],
+  python: ["python"],
+  pydantic: ["pydantic", "pydantic-settings", "pydantic-core"],
+  fastapi: ["fastapi"],
+  sqlalchemy: ["sqlalchemy"],
+  langchain: ["langchain", "langchain-core", "langchain-community", "langchain-openai"],
+  uv: ["uv"],
 };
 
-export const SUPPORTED_PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "bun"] as const;
+export const SUPPORTED_PACKAGE_MANAGERS = [
+  "npm",
+  "pnpm",
+  "yarn",
+  "bun",
+  "uv",
+  "poetry",
+  "pip",
+] as const;
 export type SupportedPackageManager = (typeof SUPPORTED_PACKAGE_MANAGERS)[number];
 
 export type ResponseStatus =
@@ -70,6 +90,7 @@ export interface PackageManagerDetection {
   detected_from:
     | "package.json#packageManager"
     | "lockfile"
+    | "pyproject.toml"
     | "default_fallback";
   lockfiles_found: string[];
   multiple_lockfiles_warning: string | null;
@@ -88,6 +109,13 @@ export interface DependencyResolution {
     | "npm-shrinkwrap.json"
     | "yarn.lock"
     | "bun.lock"
+    | "uv.lock"
+    | "poetry.lock"
+    | "requirements.txt"
+    | "requirements-dev.txt"
+    | "pyproject.toml#declared_exact"
+    | "pyproject.toml#declared_range"
+    | "pyproject.toml#tool.poetry"
     | "declared_range_exact"
     | "declared_range_min"
     | "workspace_catalog"
@@ -110,6 +138,20 @@ export interface RuntimeDetection {
       | "not_specified";
     engines_field: string | null;
     host_process_node: string;
+  };
+  python?: {
+    resolved_version: string | null;
+    raw_spec: string | null;
+    source:
+      | ".python-version"
+      | "pyproject.toml#project.requires-python"
+      | "pyproject.toml#tool.poetry.dependencies.python"
+      | ".tool-versions"
+      | "runtime.txt"
+      | "Pipfile"
+      | "not_specified";
+    requires_python_field: string | null;
+    host_process_python?: string | null;
   };
 }
 
@@ -138,6 +180,12 @@ export interface ConfigParadigms {
   };
   vite: {
     config_file: string | null;
+  };
+  python?: {
+    packaging_standard: "pep621" | "poetry" | "flit" | "pipenv" | "requirements" | "none";
+    config_files: string[];
+    build_backend: string | null;
+    uv_enabled: boolean;
   };
 }
 
@@ -189,6 +237,7 @@ export interface CheckCompatibilityOutput {
   status: ResponseStatus;
   evaluated_context: {
     runtime_node: string | null;
+    runtime_python?: string | null;
     evaluated_packages: Record<
       string,
       {

@@ -1,11 +1,11 @@
 {
   "collection": "js-ts",
   "version": "2026.10.15.1",
-  "generated_at": "2026-10-15T22:53:54.401Z",
+  "generated_at": "2026-10-25T14:30:48.376Z",
   "embedding_model": "Xenova/bge-small-en-v1.5",
   "embedding_enabled_in_seed": false,
-  "index_sha256": "805e6020e3e608853385c9c7d15eadba20033c20680378a03d533bd69d441f5b",
-  "total_chunks": 26,
+  "index_sha256": "1b46be71a8c3557d61917f78c7c99798d72b45cb2dde570c627ac407ec6189fb",
+  "total_chunks": 39,
   "chunk_count_by_library": {
     "tailwindcss": 6,
     "eslint": 5,
@@ -13,7 +13,13 @@
     "react": 3,
     "vite": 2,
     "typescript": 1,
-    "node": 2
+    "node": 2,
+    "python": 3,
+    "pydantic": 3,
+    "fastapi": 2,
+    "sqlalchemy": 2,
+    "langchain": 2,
+    "uv": 1
   },
   "scope_policy": "Only migration guides, release note breaking-change sections, and deprecation notices pinned to immutable Git tags are indexed. Full API references and tutorials are excluded.",
   "sources": [
@@ -144,6 +150,126 @@
       "release_date": "2024-10-29",
       "repository": "https://github.com/nodejs/node",
       "upstream_license": "MIT"
+    },
+    {
+      "library": "python",
+      "version": "3.10.14",
+      "git_tag": "v3.10.14",
+      "release_date": "2024-03-19",
+      "repository": "https://github.com/python/cpython",
+      "upstream_license": "PSF-2.0"
+    },
+    {
+      "library": "python",
+      "version": "3.11.9",
+      "git_tag": "v3.11.9",
+      "release_date": "2024-04-02",
+      "repository": "https://github.com/python/cpython",
+      "upstream_license": "PSF-2.0"
+    },
+    {
+      "library": "python",
+      "version": "3.12.7",
+      "git_tag": "v3.12.7",
+      "release_date": "2024-10-01",
+      "repository": "https://github.com/python/cpython",
+      "upstream_license": "PSF-2.0"
+    },
+    {
+      "library": "python",
+      "version": "3.13.0",
+      "git_tag": "v3.13.0",
+      "release_date": "2024-10-07",
+      "repository": "https://github.com/python/cpython",
+      "upstream_license": "PSF-2.0"
+    },
+    {
+      "library": "pydantic",
+      "version": "1.10.18",
+      "git_tag": "v1.10.18",
+      "release_date": "2024-09-04",
+      "repository": "https://github.com/pydantic/pydantic",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "pydantic",
+      "version": "2.10.6",
+      "git_tag": "v2.10.6",
+      "release_date": "2025-01-23",
+      "repository": "https://github.com/pydantic/pydantic",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "fastapi",
+      "version": "0.100.0",
+      "git_tag": "0.100.0",
+      "release_date": "2023-07-11",
+      "repository": "https://github.com/fastapi/fastapi",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "fastapi",
+      "version": "0.115.6",
+      "git_tag": "0.115.6",
+      "release_date": "2024-12-09",
+      "repository": "https://github.com/fastapi/fastapi",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "sqlalchemy",
+      "version": "1.4.53",
+      "git_tag": "rel_1_4_53",
+      "release_date": "2024-06-19",
+      "repository": "https://github.com/sqlalchemy/sqlalchemy",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "sqlalchemy",
+      "version": "2.0.36",
+      "git_tag": "rel_2_0_36",
+      "release_date": "2024-10-18",
+      "repository": "https://github.com/sqlalchemy/sqlalchemy",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "langchain",
+      "version": "0.1.20",
+      "git_tag": "v0.1.20",
+      "release_date": "2024-05-10",
+      "repository": "https://github.com/langchain-ai/langchain",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "langchain",
+      "version": "0.2.16",
+      "git_tag": "v0.2.16",
+      "release_date": "2024-08-30",
+      "repository": "https://github.com/langchain-ai/langchain",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "langchain",
+      "version": "0.3.7",
+      "git_tag": "v0.3.7",
+      "release_date": "2024-11-06",
+      "repository": "https://github.com/langchain-ai/langchain",
+      "upstream_license": "MIT"
+    },
+    {
+      "library": "uv",
+      "version": "0.4.30",
+      "git_tag": "0.4.30",
+      "release_date": "2024-10-31",
+      "repository": "https://github.com/astral-sh/uv",
+      "upstream_license": "MIT / Apache-2.0"
+    },
+    {
+      "library": "uv",
+      "version": "0.5.2",
+      "git_tag": "0.5.2",
+      "release_date": "2024-11-20",
+      "repository": "https://github.com/astral-sh/uv",
+      "upstream_license": "MIT / Apache-2.0"
     }
   ]
 }

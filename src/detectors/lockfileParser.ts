@@ -259,11 +259,11 @@ export function resolveProjectDependencies(
   pkgJson: Record<string, unknown> | null
 ): Record<string, DependencyResolution> {
   const result: Record<string, DependencyResolution> = {};
-  if (!pkgJson) return result;
 
-  const deps = (pkgJson.dependencies as Record<string, string> | undefined) ?? {};
-  const devDeps =
-    (pkgJson.devDependencies as Record<string, string> | undefined) ?? {};
+  if (pkgJson) {
+    const deps = (pkgJson.dependencies as Record<string, string> | undefined) ?? {};
+    const devDeps =
+      (pkgJson.devDependencies as Record<string, string> | undefined) ?? {};
 
   const pnpmLockPath = findFileUpwards(projectPath, "pnpm-lock.yaml");
   const bunLockPath = findFileUpwards(projectPath, "bun.lock");
@@ -419,6 +419,183 @@ export function resolveProjectDependencies(
             `Range "${declaredRange}" cannot be deterministically resolved without a lockfile.`,
         };
       }
+    }
+  }
+  }
+
+  const pyDeps = resolvePythonDependencies(projectPath);
+  Object.assign(result, pyDeps);
+
+  return result;
+}
+
+const PYTHON_CORE_PACKAGES: Record<string, SupportedLibrary> = {
+  pydantic: "pydantic",
+  "pydantic-settings": "pydantic",
+  "pydantic-core": "pydantic",
+  fastapi: "fastapi",
+  sqlalchemy: "sqlalchemy",
+  langchain: "langchain",
+  "langchain-core": "langchain",
+  "langchain-community": "langchain",
+  "langchain-openai": "langchain",
+  uv: "uv",
+};
+
+export function resolvePythonDependencies(
+  projectPath: string
+): Record<string, DependencyResolution> {
+  const result: Record<string, DependencyResolution> = {};
+
+  // 1. uv.lock
+  const uvLockPath = path.join(projectPath, "uv.lock");
+  if (fs.existsSync(uvLockPath)) {
+    try {
+      const content = fs.readFileSync(uvLockPath, "utf8");
+      const blocks = content.split(/\[\[package\]\]/);
+      for (const block of blocks) {
+        const nameMatch = block.match(/^\s*name\s*=\s*["']([^"']+)["']/m);
+        const verMatch = block.match(/^\s*version\s*=\s*["']([^"']+)["']/m);
+        if (nameMatch && verMatch) {
+          const pkgName = nameMatch[1].toLowerCase();
+          const ver = verMatch[1].trim();
+          if (pkgName in PYTHON_CORE_PACKAGES && !result[pkgName]) {
+            result[pkgName] = {
+              package_name: pkgName,
+              library_id: PYTHON_CORE_PACKAGES[pkgName],
+              declared_range: ver,
+              resolved_version: semver.clean(ver) ?? semver.coerce(ver)?.version ?? ver,
+              resolution_source: "uv.lock",
+              is_dev: false,
+            };
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  // 2. poetry.lock
+  const poetryLockPath = path.join(projectPath, "poetry.lock");
+  if (fs.existsSync(poetryLockPath)) {
+    try {
+      const content = fs.readFileSync(poetryLockPath, "utf8");
+      const blocks = content.split(/\[\[package\]\]/);
+      for (const block of blocks) {
+        const nameMatch = block.match(/^\s*name\s*=\s*["']([^"']+)["']/m);
+        const verMatch = block.match(/^\s*version\s*=\s*["']([^"']+)["']/m);
+        if (nameMatch && verMatch) {
+          const pkgName = nameMatch[1].toLowerCase();
+          const ver = verMatch[1].trim();
+          if (pkgName in PYTHON_CORE_PACKAGES && !result[pkgName]) {
+            result[pkgName] = {
+              package_name: pkgName,
+              library_id: PYTHON_CORE_PACKAGES[pkgName],
+              declared_range: ver,
+              resolved_version: semver.clean(ver) ?? semver.coerce(ver)?.version ?? ver,
+              resolution_source: "poetry.lock",
+              is_dev: false,
+            };
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  // 3. requirements.txt / requirements-dev.txt
+  for (const reqFile of ["requirements.txt", "requirements-dev.txt"] as const) {
+    const reqPath = path.join(projectPath, reqFile);
+    if (fs.existsSync(reqPath)) {
+      try {
+        const lines = fs.readFileSync(reqPath, "utf8").split(/\r?\n/);
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("-")) continue;
+          const match = trimmed.match(/^([a-zA-Z0-9_.-]+)(?:\[[^\]]*\])?\s*(==|>=|<=|~=|>|<)?\s*([0-9a-zA-Z._+-]*)/);
+          if (match) {
+            const rawPkg = match[1].toLowerCase();
+            const op = match[2] ?? "==";
+            const rawVer = match[3] ?? "";
+            if (rawPkg in PYTHON_CORE_PACKAGES && !result[rawPkg]) {
+              const isExact = op === "==" && Boolean(semver.clean(rawVer));
+              const analysis = analyzeVersionSpec(rawVer ? `${op}${rawVer}` : "*");
+              result[rawPkg] = {
+                package_name: rawPkg,
+                library_id: PYTHON_CORE_PACKAGES[rawPkg],
+                declared_range: rawVer ? `${op}${rawVer}` : "*",
+                resolved_version: isExact ? semver.clean(rawVer) : analysis.resolvedVersion,
+                resolution_source: isExact ? reqFile : "declared_range_min",
+                is_dev: reqFile.includes("dev"),
+              };
+            }
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  // 4. pyproject.toml
+  const pyprojectPath = path.join(projectPath, "pyproject.toml");
+  if (fs.existsSync(pyprojectPath)) {
+    try {
+      const content = fs.readFileSync(pyprojectPath, "utf8");
+      // Search lines inside dependencies = [ ... ]
+      const depBlockMatch = content.match(/dependencies\s*=\s*\[([\s\S]*?)\]/);
+      if (depBlockMatch) {
+        const items = depBlockMatch[1].match(/"[^"]+"|'[^']+'/g) || [];
+        for (const rawItem of items) {
+          const cleanItem = rawItem.replace(/['"]/g, "").trim();
+          const match = cleanItem.match(/^([a-zA-Z0-9_.-]+)(?:\[[^\]]*\])?\s*(==|>=|<=|~=|>|<|\^)?\s*([0-9a-zA-Z._+-]*)/);
+          if (match) {
+            const rawPkg = match[1].toLowerCase();
+            const op = match[2] ?? "==";
+            const rawVer = match[3] ?? "";
+            if (rawPkg in PYTHON_CORE_PACKAGES && !result[rawPkg]) {
+              const isExact = op === "==" && Boolean(semver.clean(rawVer));
+              const analysis = analyzeVersionSpec(rawVer ? `${op}${rawVer}` : "*");
+              result[rawPkg] = {
+                package_name: rawPkg,
+                library_id: PYTHON_CORE_PACKAGES[rawPkg],
+                declared_range: rawVer ? `${op}${rawVer}` : "*",
+                resolved_version: isExact ? semver.clean(rawVer) : analysis.resolvedVersion,
+                resolution_source: isExact ? "pyproject.toml#declared_exact" : "pyproject.toml#declared_range",
+                is_dev: false,
+              };
+            }
+          }
+        }
+      }
+
+      // Poetry [tool.poetry.dependencies]
+      const poetrySectionMatch = content.match(/\[tool\.poetry\.dependencies\]([\s\S]*?)(?:\[|$)/);
+      if (poetrySectionMatch) {
+        const lines = poetrySectionMatch[1].split(/\r?\n/);
+        for (const line of lines) {
+          const match = line.match(/^\s*([a-zA-Z0-9_.-]+)\s*=\s*["']([^"']+)["']/);
+          if (match) {
+            const rawPkg = match[1].toLowerCase();
+            const rawSpec = match[2].trim();
+            if (rawPkg in PYTHON_CORE_PACKAGES && !result[rawPkg]) {
+              const analysis = analyzeVersionSpec(rawSpec);
+              result[rawPkg] = {
+                package_name: rawPkg,
+                library_id: PYTHON_CORE_PACKAGES[rawPkg],
+                declared_range: rawSpec,
+                resolved_version: analysis.resolvedVersion,
+                resolution_source: "pyproject.toml#tool.poetry",
+                is_dev: false,
+              };
+            }
+          }
+        }
+      }
+    } catch {
+      // ignore
     }
   }
 

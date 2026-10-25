@@ -1,6 +1,6 @@
 {
   "manifest_version": 1,
-  "generated_at": "2026-10-15T22:53:54.401Z",
+  "generated_at": "2026-10-25T14:30:48.376Z",
   "min_client_version": "0.1.0",
   "embedding_config": {
     "enabled": false,
@@ -13,9 +13,9 @@
     "js-ts": {
       "version": "2026.10.15.1",
       "download_url": "https://github.com/Eunryong/version-compat-mcp/releases/download/index-v1/index-js-ts.db.gz",
-      "compressed_size_bytes": 26055,
-      "uncompressed_size_bytes": 147456,
-      "uncompressed_sha256": "805e6020e3e608853385c9c7d15eadba20033c20680378a03d533bd69d441f5b",
+      "compressed_size_bytes": 37827,
+      "uncompressed_size_bytes": 172032,
+      "uncompressed_sha256": "1b46be71a8c3557d61917f78c7c99798d72b45cb2dde570c627ac407ec6189fb",
       "libraries": {
         "tailwindcss": {
           "majors": [
@@ -67,6 +67,44 @@
             22
           ],
           "latest_indexed": "22.11.0"
+        },
+        "python": {
+          "majors": [
+            3
+          ],
+          "latest_indexed": "3.13.0"
+        },
+        "pydantic": {
+          "majors": [
+            1,
+            2
+          ],
+          "latest_indexed": "2.10.6"
+        },
+        "fastapi": {
+          "majors": [
+            0
+          ],
+          "latest_indexed": "0.115.6"
+        },
+        "sqlalchemy": {
+          "majors": [
+            1,
+            2
+          ],
+          "latest_indexed": "2.0.36"
+        },
+        "langchain": {
+          "majors": [
+            0
+          ],
+          "latest_indexed": "0.3.7"
+        },
+        "uv": {
+          "majors": [
+            0
+          ],
+          "latest_indexed": "0.5.2"
         }
       }
     }
